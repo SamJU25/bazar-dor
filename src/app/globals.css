@@ -1,0 +1,50 @@
+@import "tailwindcss";
+@import "@heroui/styles";
+
+:root,
+:host {
+  --font-sans: var(--font-noto-bengali), system-ui, -apple-system, sans-serif;
+  --default-font-family: var(--font-sans);
+  --accent: #15803d;
+  --accent-hover: #166534;
+  --accent-foreground: #ffffff;
+  --border: #dce6dc;
+  --control-border: #7f9484;
+  --focus: #15803d;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #f8faf8;
+  color: #162218;
+}
+
+::selection {
+  background-color: #dcfce7;
+  color: #14532d;
+}
+
+@layer base {
+  a:focus-visible,
+  button:focus-visible,
+  select:focus-visible,
+  input:focus-visible {
+    outline: 2px solid #15803d;
+    outline-offset: 2px;
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
