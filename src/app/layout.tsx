@@ -1,0 +1,72 @@
+import type { Metadata } from "next";
+import { Noto_Sans_Bengali } from "next/font/google";
+import { Toaster } from "react-hot-toast";
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
+import PriceTicker from "@/components/PriceTicker";
+import { getCategories, getProducts } from "@/lib/api";
+import { formatDhakaDateBn } from "@/lib/format";
+import "./globals.css";
+
+const notoSansBengali = Noto_Sans_Bengali({
+  subsets: ["bengali", "latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-noto-bengali",
+});
+
+export const metadata: Metadata = {
+  title: "বাজার দর | প্রতিদিনের নিত্যপণ্যের হালনাগাদ দাম",
+  description:
+    "বাংলাদেশের নিত্যপ্রয়োজনীয় পণ্য: চাল, ডাল, তেল, সবজি, মাছ, মাংস, ডিম ও মসলার আজকের বাজারদর, দামের পরিবর্তন এবং বাজারভিত্তিক তুলনা।",
+  icons: {
+    icon: "/icon.svg",
+  },
+};
+
+export default async function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  const [categories, products] = await Promise.all([
+    getCategories(),
+    getProducts(),
+  ]);
+
+  const initialDate = formatDhakaDateBn();
+
+  return (
+    <html
+      lang="bn"
+      className={`${notoSansBengali.variable} h-full antialiased`}
+    >
+      <body className="min-h-full flex flex-col font-sans bg-[#f8faf8] text-[#162218]">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-[#15803d] focus:text-white focus:text-sm focus:font-semibold"
+        >
+          মূল বিষয়বস্তুতে যান
+        </a>
+        <Navbar categories={categories} initialDate={initialDate} />
+        <PriceTicker products={products} />
+        <main id="main-content" className="flex-1">
+          {children}
+        </main>
+        <Footer />
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            duration: 3500,
+            style: {
+              borderRadius: "14px",
+              background: "#162218",
+              color: "#ffffff",
+              fontSize: "14px",
+              fontWeight: 600,
+            },
+          }}
+        />
+      </body>
+    </html>
+  );
+}
