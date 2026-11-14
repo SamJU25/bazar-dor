@@ -1,6 +1,9 @@
 "use client";
 
-import FilterSelect from "@/components/FilterSelect";
+import { useMemo } from "react";
+import FilterSelect, {
+  type FilterSelectOption,
+} from "@/components/FilterSelect";
 import { formatBnNumber } from "@/lib/format";
 import type { CategoryProductGroup } from "@/lib/products";
 
@@ -20,20 +23,25 @@ export default function CategorySelect({
   onChange,
   selectClassName = "",
 }: CategorySelectProps) {
+  const options = useMemo<FilterSelectOption[]>(
+    () => [
+      { value: "all", label: "সব বিভাগ" },
+      ...categories.map((cat) => ({
+        value: cat.category,
+        label: `${cat.categoryNameBn} (${formatBnNumber(cat.items.length)})`,
+      })),
+    ],
+    [categories],
+  );
+
   return (
     <FilterSelect
       id={id}
       ariaLabel="বিভাগ অনুযায়ী ফিল্টার"
       value={value}
       onChange={onChange}
+      options={options}
       selectClassName={selectClassName}
-    >
-      <option value="all">সব বিভাগ</option>
-      {categories.map((cat) => (
-        <option key={cat.category} value={cat.category}>
-          {cat.categoryNameBn} ({formatBnNumber(cat.items.length)})
-        </option>
-      ))}
-    </FilterSelect>
+    />
   );
 }

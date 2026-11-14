@@ -5,12 +5,92 @@
 :host {
   --font-sans: var(--font-noto-bengali), system-ui, -apple-system, sans-serif;
   --default-font-family: var(--font-sans);
+  --background: #f8faf8;
+  --foreground: #162218;
+  --surface: #ffffff;
+  --overlay: #ffffff;
+  --overlay-foreground: #162218;
+  --overlay-shadow:
+    0 12px 32px -4px rgba(22, 34, 24, 0.12),
+    0 4px 12px -2px rgba(22, 34, 24, 0.06);
+  --muted: #475569;
+  --default: #f3fbf4;
+  --default-hover: #e6f7e9;
+  --default-foreground: #162218;
   --accent: #15803d;
   --accent-hover: #166534;
   --accent-foreground: #ffffff;
+  --accent-soft: #ecfdf5;
+  --accent-soft-foreground: #166534;
+  --accent-soft-hover: #dcfce7;
   --border: #dce6dc;
+  --separator: #dce6dc;
   --control-border: #7f9484;
+  --field-background: #ffffff;
+  --field-foreground: #162218;
+  --field-placeholder: #64748b;
+  --field-border: #7f9484;
+  --field-border-width: 1px;
+  --field-border-hover: #15803d;
+  --field-border-focus: #15803d;
+  --field-hover: #ffffff;
+  --field-focus: #ffffff;
+  --field-shadow: none;
+  --scrollbar-thumb: rgba(21, 128, 61, 0.25);
   --focus: #15803d;
+}
+
+@layer components {
+  .select__popover,
+  .dropdown__popover {
+    border-radius: 1rem;
+    border: 1px solid #dce6dc;
+    background-color: #ffffff;
+    box-shadow: var(--overlay-shadow);
+  }
+
+  .select__popover {
+    min-width: max(var(--trigger-width, 9.25rem), 12rem);
+  }
+
+  .list-box-item,
+  .menu-item {
+    border-radius: 0.75rem;
+    color: #162218;
+    font-weight: 500;
+  }
+
+  .list-box-item[data-hovered="true"],
+  .list-box-item[data-focused="true"],
+  .menu-item:not(.menu-item--danger)[data-hovered="true"],
+  .menu-item:not(.menu-item--danger)[data-focused="true"] {
+    background-color: #f3fbf4;
+    color: #15803d;
+    outline: none;
+  }
+
+  .list-box-item[data-selected="true"] {
+    background-color: #ecfdf5;
+    color: #166534;
+    font-weight: 600;
+  }
+
+  .list-box-item[data-selected="true"][data-hovered="true"],
+  .list-box-item[data-selected="true"][data-focused="true"] {
+    background-color: #dcfce7;
+    color: #14532d;
+  }
+
+  .list-box-item [data-slot="list-box-item-indicator"] {
+    color: #15803d;
+  }
+
+  .menu-item--danger[data-hovered="true"],
+  .menu-item--danger[data-focused="true"] {
+    background-color: #fef2f2;
+    color: #b91c1c;
+    outline: none;
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {

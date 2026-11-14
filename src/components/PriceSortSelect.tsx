@@ -1,7 +1,15 @@
 "use client";
 
-import FilterSelect from "@/components/FilterSelect";
+import FilterSelect, {
+  type FilterSelectOption,
+} from "@/components/FilterSelect";
 import type { SortOption } from "@/lib/products";
+
+const SORT_OPTIONS: readonly FilterSelectOption[] = [
+  { value: "default", label: "ডিফল্ট সাজান" },
+  { value: "price-asc", label: "দাম: কম থেকে বেশি" },
+  { value: "price-desc", label: "দাম: বেশি থেকে কম" },
+];
 
 interface PriceSortSelectProps {
   id: string;
@@ -23,11 +31,8 @@ export default function PriceSortSelect({
       ariaLabel="দাম অনুযায়ী সাজান"
       value={value}
       onChange={(next) => onChange(next as SortOption)}
+      options={SORT_OPTIONS}
       selectClassName={selectClassName}
-    >
-      <option value="default">ডিফল্ট সাজান</option>
-      <option value="price-asc">দাম: কম থেকে বেশি</option>
-      <option value="price-desc">দাম: বেশি থেকে কম</option>
-    </FilterSelect>
+    />
   );
 }

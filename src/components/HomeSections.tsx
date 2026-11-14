@@ -309,14 +309,14 @@ export default function HomeSections({ products }: { products: IProduct[] }) {
                 onChange={(category) =>
                   dispatch({ type: "SET_CATEGORY", category })
                 }
-                selectClassName="w-full"
+                selectClassName="w-full sm:w-auto"
               />
 
               <PriceSortSelect
                 id="home-sort"
                 value={filterState.sortBy}
                 onChange={(sortBy) => dispatch({ type: "SET_SORT", sortBy })}
-                selectClassName="w-full"
+                selectClassName="w-full sm:w-auto"
               />
             </div>
           </div>
