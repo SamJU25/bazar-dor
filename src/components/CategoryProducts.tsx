@@ -12,12 +12,12 @@ import {
   catalogFilterReducer,
   deriveCatalogView,
 } from "@/lib/state-machines";
-import type { IProduct } from "@/types/bazar";
+import type { IProductSummary } from "@/types/bazar";
 
 export default function CategoryProducts({
   products,
 }: {
-  products: IProduct[];
+  products: IProductSummary[];
 }) {
   const [filterState, dispatch] = useReducer(
     catalogFilterReducer,

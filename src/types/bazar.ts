@@ -17,7 +17,8 @@ export interface IPriceChange {
   pct: number;
 }
 
-export interface IProduct {
+/** Slimmed product projection passed to list views without large market arrays. */
+export interface IProductSummary {
   id: number;
   slug: string;
   nameBn: string;
@@ -28,8 +29,23 @@ export interface IProduct {
   image: string;
   today: number;
   yesterday: number;
+  change: IPriceChange;
+}
+
+/** Minimal product projection serialized into the global marquee ticker. */
+export interface ITickerItem {
+  id: number;
+  slug: string;
+  nameBn: string;
+  unit: "kg" | "litre" | "dozen" | "piece" | string;
+  image: string;
+  today: number;
+  change: IPriceChange;
+}
+
+export interface IProduct extends IProductSummary {
+  yesterday: number;
   lastWeek: number;
   lastMonth: number;
-  change: IPriceChange;
   markets: IMarketPrice[];
 }

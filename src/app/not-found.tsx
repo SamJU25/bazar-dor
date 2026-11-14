@@ -8,6 +8,9 @@ export default function NotFound() {
       <h1 className="text-2xl sm:text-3xl font-bold text-[#162218]">
         পৃষ্ঠাটি পাওয়া যায়নি
       </h1>
+      <p className="text-sm sm:text-base text-slate-600 max-w-md">
+        আপনি যে পৃষ্ঠা বা পণ্যের তথ্য খুঁজছেন তা পাওয়া যায়নি অথবা সরানো হয়েছে।
+      </p>
       <div className="pt-2">
         <Link
           href="/"

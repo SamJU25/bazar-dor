@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useReducer, useRef } from "react";
+import {
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+} from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Search, TrendingDown, TrendingUp, X } from "lucide-react";
 import BnNumber from "@/components/BnNumber";
@@ -22,7 +28,7 @@ import {
   catalogFilterReducer,
   deriveCatalogView,
 } from "@/lib/state-machines";
-import type { IProduct } from "@/types/bazar";
+import type { IProductSummary } from "@/types/bazar";
 
 const VALID_DIRECTIONS = new Set<DirectionFilter>(["all", "up", "down", "flat"]);
 const VALID_SORTS = new Set<SortOption>(["default", "price-asc", "price-desc"]);
@@ -37,7 +43,7 @@ function MoverPanel({
 }: {
   id: string;
   title: string;
-  items: IProduct[];
+  items: IProductSummary[];
   totalCount: number;
   onViewAll: () => void;
   tone: "up" | "down";
@@ -75,7 +81,7 @@ function MoverPanel({
           <button
             type="button"
             onClick={onViewAll}
-            className={`inline-flex items-center gap-1 px-2 py-1 -my-1 -mr-2 rounded-lg text-xs sm:text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803d]/40 transition-colors shrink-0 cursor-pointer ${
+            className={`inline-flex items-center gap-1 min-h-9 px-2.5 py-1.5 -my-1 -mr-2 rounded-lg text-xs sm:text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803d] transition-colors shrink-0 cursor-pointer ${
               tone === "up"
                 ? "text-[#15803d] hover:text-[#166534] hover:bg-[#f3fbf4]"
                 : "text-[#b91c1c] hover:text-[#991b1b] hover:bg-[#fff1f2]"
@@ -102,7 +108,11 @@ function MoverPanel({
   );
 }
 
-export default function HomeSections({ products }: { products: IProduct[] }) {
+export default function HomeSections({
+  products,
+}: {
+  products: IProductSummary[];
+}) {
   const router = useRouter();
   const searchInputRef = useRef<HTMLInputElement>(null);
   const didHydrateUrlRef = useRef(false);
@@ -110,6 +120,7 @@ export default function HomeSections({ products }: { products: IProduct[] }) {
     catalogFilterReducer,
     INITIAL_CATALOG_FILTER_STATE,
   );
+  const deferredQuery = useDeferredValue(filterState.query);
 
   const categoryGroups = useMemo(
     () => groupProductsByCategory(products),
@@ -119,54 +130,58 @@ export default function HomeSections({ products }: { products: IProduct[] }) {
   useEffect(() => {
     const validCategories = new Set(categoryGroups.map((g) => g.category));
     const params = new URLSearchParams(window.location.search);
-    const q = params.get("q");
+    const q = params.get("q") ?? "";
     const cat = params.get("cat");
     const dir = params.get("dir") as DirectionFilter | null;
     const sort = params.get("sort") as SortOption | null;
 
-    if (q) dispatch({ type: "SET_QUERY", query: q });
-    if (cat && validCategories.has(cat)) {
-      dispatch({ type: "SET_CATEGORY", category: cat });
-    }
-    if (dir && VALID_DIRECTIONS.has(dir)) {
-      dispatch({ type: "SET_DIRECTION", direction: dir });
-    }
-    if (sort && VALID_SORTS.has(sort)) {
-      dispatch({ type: "SET_SORT", sortBy: sort });
-    }
+    dispatch({
+      type: "HYDRATE_FROM_URL",
+      state: {
+        query: q,
+        category: cat && validCategories.has(cat) ? cat : "all",
+        direction: dir && VALID_DIRECTIONS.has(dir) ? dir : "all",
+        sortBy: sort && VALID_SORTS.has(sort) ? sort : "default",
+      },
+    });
     didHydrateUrlRef.current = true;
   }, [categoryGroups]);
 
   useEffect(() => {
     if (!didHydrateUrlRef.current) return;
-    const params = new URLSearchParams(window.location.search);
-    if (filterState.query.trim()) {
-      params.set("q", filterState.query);
-    } else {
-      params.delete("q");
-    }
-    if (filterState.category !== "all") {
-      params.set("cat", filterState.category);
-    } else {
-      params.delete("cat");
-    }
-    if (filterState.direction !== "all") {
-      params.set("dir", filterState.direction);
-    } else {
-      params.delete("dir");
-    }
-    if (filterState.sortBy !== "default") {
-      params.set("sort", filterState.sortBy);
-    } else {
-      params.delete("sort");
-    }
 
-    const qs = params.toString();
-    const nextUrl = `${window.location.pathname}${qs ? `?${qs}` : ""}${window.location.hash}`;
-    const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
-    if (nextUrl !== currentUrl) {
-      window.history.replaceState(null, "", nextUrl);
-    }
+    const timeoutId = window.setTimeout(() => {
+      const params = new URLSearchParams(window.location.search);
+      if (filterState.query.trim()) {
+        params.set("q", filterState.query);
+      } else {
+        params.delete("q");
+      }
+      if (filterState.category !== "all") {
+        params.set("cat", filterState.category);
+      } else {
+        params.delete("cat");
+      }
+      if (filterState.direction !== "all") {
+        params.set("dir", filterState.direction);
+      } else {
+        params.delete("dir");
+      }
+      if (filterState.sortBy !== "default") {
+        params.set("sort", filterState.sortBy);
+      } else {
+        params.delete("sort");
+      }
+
+      const qs = params.toString();
+      const nextUrl = `${window.location.pathname}${qs ? `?${qs}` : ""}${window.location.hash}`;
+      const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+      if (nextUrl !== currentUrl) {
+        window.history.replaceState(null, "", nextUrl);
+      }
+    }, 200);
+
+    return () => window.clearTimeout(timeoutId);
   }, [
     filterState.query,
     filterState.category,
@@ -207,12 +222,19 @@ export default function HomeSections({ products }: { products: IProduct[] }) {
   const handleViewAllMovers = (direction: "up" | "down") => {
     dispatch({ type: "RESET_FILTERS" });
     dispatch({ type: "SET_DIRECTION", direction });
-    document.getElementById("সব-পণ্য")?.scrollIntoView({ behavior: "smooth" });
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    document
+      .getElementById("সব-পণ্য")
+      ?.scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
   };
 
   const catalogView = useMemo(
-    () => deriveCatalogView(products, filterState),
-    [products, filterState],
+    () =>
+      deriveCatalogView(products, {
+        ...filterState,
+        query: deferredQuery,
+      }),
+    [products, filterState, deferredQuery],
   );
 
   return (
@@ -220,7 +242,7 @@ export default function HomeSections({ products }: { products: IProduct[] }) {
       {/* Section A & B: Market Movers */}
       <div
         id="দর-পরিবর্তন"
-        className="grid grid-cols-1 lg:grid-cols-2 gap-6 scroll-mt-32 lg:scroll-mt-24"
+        className="grid grid-cols-1 lg:grid-cols-2 gap-6 scroll-mt-32 xl:scroll-mt-24"
       >
         <MoverPanel
           id="section-risers"
@@ -246,7 +268,7 @@ export default function HomeSections({ products }: { products: IProduct[] }) {
         id="সব-পণ্য"
         aria-labelledby="section-all-products"
         data-state={catalogView.status}
-        className="space-y-6 scroll-mt-32 lg:scroll-mt-24"
+        className="space-y-6 scroll-mt-32 xl:scroll-mt-24"
       >
         <div className="space-y-4">
           <div className="flex items-baseline gap-2.5">
@@ -257,7 +279,10 @@ export default function HomeSections({ products }: { products: IProduct[] }) {
               সব পণ্য
             </h2>
             {catalogView.hasActiveFilters ? (
-              <span className="text-xs sm:text-sm font-medium text-slate-600 tabular-nums">
+              <span
+                aria-live="polite"
+                className="text-xs sm:text-sm font-medium text-slate-600 tabular-nums"
+              >
                 <BnNumber value={catalogView.visibleProducts.length} />টি পণ্য
               </span>
             ) : null}
@@ -272,7 +297,7 @@ export default function HomeSections({ products }: { products: IProduct[] }) {
               }
             />
 
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 shrink-0">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-2.5 shrink-0">
               <div className="relative">
                 <Search
                   size={15}
@@ -286,16 +311,17 @@ export default function HomeSections({ products }: { products: IProduct[] }) {
                   onChange={(e) =>
                     dispatch({ type: "SET_QUERY", query: e.target.value })
                   }
-                  placeholder="খুঁজুন (/)"
+                  placeholder="খুঁজুন..."
                   aria-label="পণ্যের নাম খুঁজুন"
-                  className="w-full sm:w-52 h-11 sm:h-10 pl-9 pr-10 rounded-xl bg-white border border-[#7f9484] text-base sm:text-sm text-[#162218] placeholder:text-slate-500 focus:border-[#15803d] focus:ring-2 focus:ring-[#15803d]/20 focus:outline-none transition-colors"
+                  aria-keyshortcuts="/"
+                  className="w-full sm:w-52 h-11 sm:h-10 pl-9 pr-10 rounded-xl bg-white border border-[#7f9484] text-base sm:text-sm text-[#162218] placeholder:text-slate-500 focus:border-[#15803d] focus:ring-2 focus:ring-[#15803d] focus:outline-none transition-colors [&::-webkit-search-cancel-button]:hidden"
                 />
                 {filterState.query ? (
                   <button
                     type="button"
                     onClick={() => dispatch({ type: "SET_QUERY", query: "" })}
                     aria-label="খোঁজা মুছুন"
-                    className="absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-lg text-slate-500 hover:text-[#15803d] hover:bg-[#f3fbf4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803d]/35 active:scale-95 motion-reduce:active:transform-none transition-colors cursor-pointer"
+                    className="absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-lg text-slate-500 hover:text-[#15803d] hover:bg-[#f3fbf4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803d] active:scale-95 motion-reduce:active:transform-none transition-colors cursor-pointer"
                   >
                     <X size={15} aria-hidden="true" />
                   </button>
@@ -332,7 +358,7 @@ export default function HomeSections({ products }: { products: IProduct[] }) {
           <CatalogEmptyPanel
             message={
               catalogView.status === "empty-search"
-                ? `“${filterState.query.trim()}” পাওয়া যায়নি।`
+                ? `“${deferredQuery.trim()}” পাওয়া যায়নি।`
                 : "এই ফিল্টারে কোনো পণ্য নেই।"
             }
             actionLabel="সব পণ্য দেখুন"

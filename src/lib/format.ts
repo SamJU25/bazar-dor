@@ -21,7 +21,8 @@ const DHAKA_DATE_FORMATTER = new Intl.DateTimeFormat("bn-BD", {
 });
 
 export function formatBnNumber(value: number, fractionDigits = 0): string {
-  return value.toLocaleString("bn-BD", {
+  const safeValue = Number.isFinite(value) ? value : 0;
+  return safeValue.toLocaleString("bn-BD", {
     minimumFractionDigits: fractionDigits,
     maximumFractionDigits: fractionDigits,
   });

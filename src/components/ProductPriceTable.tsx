@@ -2,10 +2,10 @@ import Link from "next/link";
 import PriceAmount from "@/components/PriceAmount";
 import PriceChangeBadge from "@/components/PriceChangeBadge";
 import { formatUnitBn } from "@/lib/format";
-import type { IProduct } from "@/types/bazar";
+import type { IProductSummary } from "@/types/bazar";
 
 interface ProductPriceTableProps {
-  items: IProduct[];
+  items: IProductSummary[];
   headingLevel?: "h3" | "h4";
   showCategoryInSubtitle?: boolean;
 }
@@ -38,6 +38,7 @@ export default function ProductPriceTable({
           <Link
             key={item.id}
             href={`/product/${item.slug}`}
+            prefetch={false}
             className={`flex items-center justify-between gap-3 ${GRID_COLS} px-4 sm:px-5 py-3 hover:bg-[#f8faf8] transition-colors group`}
           >
             <div className="flex items-center gap-3 min-w-0">

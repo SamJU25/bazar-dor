@@ -171,7 +171,7 @@ describe("catalogFilterReducer & deriveCatalogView", () => {
     );
   });
 
-  it("resets filters cleanly to initial state", () => {
+  it("resets filters cleanly to initial state and supports HYDRATE_FROM_URL", () => {
     const withCategory = catalogFilterReducer(INITIAL_CATALOG_FILTER_STATE, {
       type: "SET_CATEGORY",
       category: "chal",
@@ -184,5 +184,21 @@ describe("catalogFilterReducer & deriveCatalogView", () => {
       catalogFilterReducer(modified, { type: "RESET_FILTERS" }),
       INITIAL_CATALOG_FILTER_STATE,
     );
+
+    const hydrated = catalogFilterReducer(INITIAL_CATALOG_FILTER_STATE, {
+      type: "HYDRATE_FROM_URL",
+      state: {
+        query: "চাল",
+        category: "rice",
+        direction: "up",
+        sortBy: "price-asc",
+      },
+    });
+    assert.deepEqual(hydrated, {
+      query: "চাল",
+      category: "rice",
+      direction: "up",
+      sortBy: "price-asc",
+    });
   });
 });

@@ -1,15 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { ChevronRight, Home } from "lucide-react";
 import BnNumber from "@/components/BnNumber";
 import PriceAmount from "@/components/PriceAmount";
 import PriceChangeBadge from "@/components/PriceChangeBadge";
 import ProductMarketsSection from "@/components/ProductMarketsSection";
-import { getServerSession } from "@/lib/auth";
+import { getCachedServerSession } from "@/lib/auth";
 import { buildAuthUrl } from "@/lib/auth-helpers";
-import { getProductBySlugOrId } from "@/lib/api";
+import { getCachedProductDetailsStrict } from "@/lib/catalog";
 import {
   formatShortUnitBn,
   formatUnitBn,
@@ -21,15 +20,26 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const session = await getServerSession(await headers());
+  const session = await getCachedServerSession();
   if (!session) {
-    return { title: "সাইন ইন | বাজার দর" };
+    return {
+      title: "সাইন ইন",
+      robots: { index: false, follow: false },
+    };
   }
   const { slug } = await params;
-  const product = await getProductBySlugOrId(slug);
-  return {
-    title: product ? `${product.nameBn} | বাজার দর` : "বাজার দর",
-  };
+  try {
+    const product = await getCachedProductDetailsStrict(slug);
+    return {
+      title: product ? product.nameBn : { absolute: "বাজার দর" },
+      robots: { index: false, follow: false },
+    };
+  } catch {
+    return {
+      title: { absolute: "বাজার দর" },
+      robots: { index: false, follow: false },
+    };
+  }
 }
 
 export default async function ProductDetailsPage({
@@ -39,12 +49,12 @@ export default async function ProductDetailsPage({
 }) {
   const { slug } = await params;
 
-  const session = await getServerSession(await headers());
+  const session = await getCachedServerSession();
   if (!session) {
     redirect(buildAuthUrl("/signin", `/product/${slug}`, "auth_required"));
   }
 
-  const product = await getProductBySlugOrId(slug);
+  const product = await getCachedProductDetailsStrict(slug);
 
   if (!product) {
     notFound();
@@ -62,10 +72,10 @@ export default async function ProductDetailsPage({
   ];
 
   return (
-    <div className="min-h-screen w-full py-6 sm:py-8 bg-[#f8faf8]">
+    <div className="w-full py-6 sm:py-8 bg-[#f8faf8]">
       <div className="max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 space-y-6">
         <nav
-          aria-label="Breadcrumb"
+          aria-label="ব্রেডক্রাম্ব"
           className="flex flex-wrap items-center gap-1.5 text-xs sm:text-sm font-medium text-slate-600"
         >
           <Link
@@ -84,7 +94,9 @@ export default async function ProductDetailsPage({
             <span>{product.categoryNameBn}</span>
           </Link>
           <ChevronRight size={14} aria-hidden="true" />
-          <span className="font-semibold text-[#162218]">{product.nameBn}</span>
+          <span aria-current="page" className="font-semibold text-[#162218]">
+            {product.nameBn}
+          </span>
         </nav>
 
         {/* Product Header */}
@@ -170,12 +182,14 @@ export default async function ProductDetailsPage({
         {/* Historical Timeline */}
         <section
           aria-label="পূর্ববর্তী দাম"
-          className="bg-white rounded-2xl border border-[#dce6dc] grid grid-cols-2 sm:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[#e8efe8]"
+          className="bg-white rounded-2xl border border-[#dce6dc] grid grid-cols-2 sm:grid-cols-4 overflow-hidden"
         >
           {priceSteps.map((step) => (
             <div
               key={step.label}
-              className={`p-4 sm:px-5 ${step.current ? "bg-[#f3fbf4]" : ""}`}
+              className={`p-4 sm:px-5 border-b sm:border-b-0 odd:border-r sm:border-r sm:last:border-r-0 [&:nth-child(n+3)]:border-b-0 border-[#e8efe8] ${
+                step.current ? "bg-[#f3fbf4]" : ""
+              }`}
             >
               <span
                 className={`text-xs font-medium block ${

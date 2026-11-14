@@ -1,13 +1,11 @@
-"use client";
-
 import Link from "next/link";
 import PriceAmount from "@/components/PriceAmount";
 import PriceChangeBadge from "@/components/PriceChangeBadge";
 import { formatShortUnitBn } from "@/lib/format";
-import type { IProduct } from "@/types/bazar";
+import type { IProductSummary } from "@/types/bazar";
 
 interface ProductCardProps {
-  product: IProduct;
+  product: IProductSummary;
   headingLevel?: "h2" | "h3" | "h4";
 }
 
@@ -20,6 +18,7 @@ export default function ProductCard({
   return (
     <Link
       href={`/product/${product.slug}`}
+      prefetch={false}
       className="group flex flex-col justify-between h-full p-4 sm:p-5 rounded-2xl bg-white border border-[#dce6dc] hover:border-[#15803d] transition-colors"
     >
       <div className="flex items-start justify-between gap-2.5">

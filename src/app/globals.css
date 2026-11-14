@@ -1,5 +1,41 @@
+@layer theme, base, components, utilities;
+
 @import "tailwindcss";
-@import "@heroui/styles";
+@import "@heroui/styles/base" layer(base);
+@import "@heroui/styles/base/scrollbar.css" layer(base);
+
+/* Shared component primitives first so specialized component styles override them cleanly */
+@import "@heroui/styles/components/close-button.css" layer(components);
+@import "@heroui/styles/components/description.css" layer(components);
+@import "@heroui/styles/components/error-message.css" layer(components);
+@import "@heroui/styles/components/field-error.css" layer(components);
+@import "@heroui/styles/components/label.css" layer(components);
+
+/* Used HeroUI components only (cuts unused calendar, picker, table, and modal CSS) */
+@import "@heroui/styles/components/avatar.css" layer(components);
+@import "@heroui/styles/components/button.css" layer(components);
+@import "@heroui/styles/components/card.css" layer(components);
+@import "@heroui/styles/components/dropdown.css" layer(components);
+@import "@heroui/styles/components/header.css" layer(components);
+@import "@heroui/styles/components/input.css" layer(components);
+@import "@heroui/styles/components/list-box-item.css" layer(components);
+@import "@heroui/styles/components/list-box-section.css" layer(components);
+@import "@heroui/styles/components/list-box.css" layer(components);
+@import "@heroui/styles/components/menu-item.css" layer(components);
+@import "@heroui/styles/components/menu-section.css" layer(components);
+@import "@heroui/styles/components/menu.css" layer(components);
+@import "@heroui/styles/components/popover.css" layer(components);
+@import "@heroui/styles/components/scroll-shadow.css" layer(components);
+@import "@heroui/styles/components/select.css" layer(components);
+@import "@heroui/styles/components/separator.css" layer(components);
+@import "@heroui/styles/components/skeleton.css" layer(components);
+@import "@heroui/styles/components/spinner.css" layer(components);
+@import "@heroui/styles/components/surface.css" layer(components);
+@import "@heroui/styles/components/textfield.css" layer(components);
+
+@import "@heroui/styles/themes/default" layer(theme);
+@import "@heroui/styles/utilities";
+@import "@heroui/styles/variants";
 
 :root,
 :host {
@@ -23,6 +59,10 @@
   --accent-soft: #ecfdf5;
   --accent-soft-foreground: #166534;
   --accent-soft-hover: #dcfce7;
+  --danger: #b91c1c;
+  --danger-foreground: #ffffff;
+  --danger-soft: #fef2f2;
+  --danger-soft-foreground: #b91c1c;
   --border: #dce6dc;
   --separator: #dce6dc;
   --control-border: #7f9484;
@@ -61,12 +101,20 @@
   }
 
   .list-box-item[data-hovered="true"],
-  .list-box-item[data-focused="true"],
-  .menu-item:not(.menu-item--danger)[data-hovered="true"],
-  .menu-item:not(.menu-item--danger)[data-focused="true"] {
+  .menu-item:not(.menu-item--danger)[data-hovered="true"] {
     background-color: #f3fbf4;
     color: #15803d;
     outline: none;
+  }
+
+  .list-box-item[data-focused="true"],
+  .list-box-item[data-focus-visible="true"],
+  .menu-item:not(.menu-item--danger)[data-focused="true"],
+  .menu-item:not(.menu-item--danger)[data-focus-visible="true"] {
+    background-color: #ecfdf5;
+    color: #166534;
+    outline: 2px solid #15803d;
+    outline-offset: -2px;
   }
 
   .list-box-item[data-selected="true"] {
@@ -75,21 +123,35 @@
     font-weight: 600;
   }
 
-  .list-box-item[data-selected="true"][data-hovered="true"],
-  .list-box-item[data-selected="true"][data-focused="true"] {
+  .list-box-item[data-selected="true"][data-hovered="true"] {
     background-color: #dcfce7;
     color: #14532d;
+  }
+
+  .list-box-item[data-selected="true"][data-focused="true"],
+  .list-box-item[data-selected="true"][data-focus-visible="true"] {
+    background-color: #dcfce7;
+    color: #14532d;
+    outline: 2px solid #15803d;
+    outline-offset: -2px;
   }
 
   .list-box-item [data-slot="list-box-item-indicator"] {
     color: #15803d;
   }
 
-  .menu-item--danger[data-hovered="true"],
-  .menu-item--danger[data-focused="true"] {
+  .menu-item--danger[data-hovered="true"] {
     background-color: #fef2f2;
     color: #b91c1c;
     outline: none;
+  }
+
+  .menu-item--danger[data-focused="true"],
+  .menu-item--danger[data-focus-visible="true"] {
+    background-color: #fef2f2;
+    color: #b91c1c;
+    outline: 2px solid #b91c1c;
+    outline-offset: -2px;
   }
 
   .btn-primary,
@@ -225,15 +287,27 @@
     box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.2);
   }
 
-  .btn-secondary:disabled,
-  .button.btn-secondary:disabled,
-  .button.btn-secondary[aria-disabled="true"] {
+  .btn-secondary:disabled:not([aria-busy="true"]),
+  .button.btn-secondary:disabled:not([aria-busy="true"]),
+  .button.btn-secondary[aria-disabled="true"]:not([aria-busy="true"]) {
     background-color: #f4f7f4;
     border-color: #d3dfd4;
     color: #64748b;
     box-shadow: none;
     opacity: 1;
     cursor: not-allowed;
+    pointer-events: none;
+    transform: none;
+  }
+
+  .btn-secondary[aria-busy="true"],
+  .button.btn-secondary[aria-busy="true"] {
+    background-color: #f3fbf4;
+    border-color: #7f9484;
+    color: #162218;
+    box-shadow: none;
+    opacity: 1;
+    cursor: progress;
     pointer-events: none;
     transform: none;
   }
@@ -279,8 +353,29 @@
   }
 
   .link-back:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(21, 128, 61, 0.35);
+    outline: 2px solid #15803d;
+    outline-offset: 2px;
+  }
+
+  @keyframes bazardor-marquee {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  .bazardor-ticker-track {
+    display: flex;
+    width: max-content;
+    animation: bazardor-marquee 42s linear infinite;
+    will-change: transform;
+  }
+
+  .bazardor-ticker-viewport:hover .bazardor-ticker-track,
+  .bazardor-ticker-viewport:focus-within .bazardor-ticker-track {
+    animation-play-state: paused;
   }
 }
 

@@ -2,11 +2,15 @@
   "name": "bazar-dor",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.6.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit --noUnusedLocals --noUnusedParameters",
     "test": "node --test --experimental-strip-types tests/*.test.ts"
   },
   "dependencies": {
@@ -19,7 +23,6 @@
     "next": "16.4.4",
     "react": "19.3.0",
     "react-dom": "19.3.0",
-    "react-fast-marquee": "^1.6.5",
     "react-hot-toast": "^2.6.1"
   },
   "devDependencies": {

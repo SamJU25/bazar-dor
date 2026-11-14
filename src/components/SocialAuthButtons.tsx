@@ -1,10 +1,11 @@
 "use client";
 
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { Button } from "@heroui/react";
 import toast from "react-hot-toast";
 import { AuthErrorAlert } from "@/components/AuthFormShell";
 import { signIn } from "@/lib/auth-client";
+import { buildAuthUrl, formatAuthActionError } from "@/lib/auth-helpers";
 import {
   type OAuthProvider,
   socialAuthReducer,
@@ -21,6 +22,16 @@ export default function SocialAuthButtons({
     status: "idle",
   });
 
+  useEffect(() => {
+    const resetOnBfcache = (event: PageTransitionEvent) => {
+      if (event.persisted) {
+        dispatch({ type: "RESET" });
+      }
+    };
+    window.addEventListener("pageshow", resetOnBfcache);
+    return () => window.removeEventListener("pageshow", resetOnBfcache);
+  }, []);
+
   const handleSocialLogin = async (provider: OAuthProvider) => {
     if (authState.status === "redirecting") return;
     dispatch({ type: "START", provider });
@@ -28,13 +39,16 @@ export default function SocialAuthButtons({
       const { error } = await signIn.social({
         provider,
         callbackURL,
-        errorCallbackURL: "/signin",
+        errorCallbackURL: buildAuthUrl("/signin", callbackURL),
       });
       if (error) {
         const message =
           error.code === "PROVIDER_NOT_FOUND"
             ? "এই সোশ্যাল লগইন প্রোভাইডারটি এখনও কনফিগার করা হয়নি"
-            : error.message || "সোশ্যাল লগইন করা যায়নি";
+            : formatAuthActionError(
+                error.message,
+                "সোশ্যাল লগইন করা যায়নি",
+              );
         dispatch({ type: "FAIL", provider, message });
         toast.error(message);
       }

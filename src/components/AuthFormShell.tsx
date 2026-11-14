@@ -14,7 +14,7 @@ import { ArrowLeft, Eye, EyeOff, Loader2, Lock } from "lucide-react";
 import SocialAuthButtons from "@/components/SocialAuthButtons";
 
 const INPUT_BASE_CLASS =
-  "w-full h-11 pl-10 rounded-xl bg-white hover:bg-white focus:bg-white shadow-none border border-[#7f9484] hover:border-[#15803d] focus:border-[#15803d] focus:ring-2 focus:ring-[#15803d]/20 focus:outline-none text-base sm:text-sm text-[#162218] placeholder:text-slate-500 transition-colors";
+  "w-full h-11 pl-10 rounded-xl bg-white hover:bg-white focus:bg-white shadow-none border border-[#7f9484] hover:border-[#15803d] focus:border-[#15803d] focus:ring-2 focus:ring-[#15803d] focus:outline-none text-base sm:text-sm text-[#162218] placeholder:text-slate-500 transition-colors";
 
 export const AUTH_INPUT_CLASS = `${INPUT_BASE_CLASS} pr-3.5`;
 const AUTH_PASSWORD_INPUT_CLASS = `${INPUT_BASE_CLASS} pr-11`;
@@ -40,32 +40,6 @@ export function AuthErrorAlert({
   );
 }
 
-/** Shared prompt shown on client-protected routes when no session is active. */
-export function AuthRequiredNotice({
-  state,
-  signInHref = "/signin",
-}: {
-  state: string;
-  signInHref?: string;
-}) {
-  return (
-    <div
-      data-state={state}
-      className="max-w-lg mx-auto px-4 py-16 text-center space-y-4"
-    >
-      <h1 className="text-2xl font-bold text-[#162218]">
-        সাইন ইন করা প্রয়োজন
-      </h1>
-      <Link
-        href={signInHref}
-        className="btn-primary h-11 px-6 rounded-xl"
-      >
-        সাইন ইন করুন
-      </Link>
-    </div>
-  );
-}
-
 interface AuthPageShellProps {
   title: string;
   callbackUrl: string;
@@ -85,7 +59,7 @@ export function AuthPageShell({
   children,
 }: AuthPageShellProps) {
   return (
-    <div className="min-h-[calc(100vh-140px)] w-full flex flex-col items-center justify-center bg-[#f8faf8] px-4 py-8 sm:py-10">
+    <div className="w-full flex flex-col items-center justify-center bg-[#f8faf8] px-4 py-8 sm:py-12">
       <div className="w-full max-w-[440px] space-y-4">
         <Link href="/" className="link-back text-xs sm:text-sm">
           <ArrowLeft size={15} aria-hidden="true" />
@@ -130,6 +104,7 @@ interface AuthPasswordFieldProps {
   placeholder: string;
   autoComplete: "current-password" | "new-password";
   minLength?: number;
+  maxLength?: number;
   onChange: () => void;
 }
 
@@ -140,6 +115,7 @@ export function AuthPasswordField({
   placeholder,
   autoComplete,
   minLength,
+  maxLength = 128,
   onChange,
 }: AuthPasswordFieldProps) {
   const [isVisible, setIsVisible] = useState(false);
@@ -165,12 +141,13 @@ export function AuthPasswordField({
         <Input
           placeholder={placeholder}
           autoComplete={autoComplete}
+          maxLength={maxLength}
           className={AUTH_PASSWORD_INPUT_CLASS}
         />
         <button
           type="button"
           onClick={() => setIsVisible((prev) => !prev)}
-          className="absolute right-1.5 w-9 h-9 flex items-center justify-center rounded-lg text-slate-500 hover:text-[#15803d] hover:bg-[#f3fbf4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803d]/35 active:scale-95 motion-reduce:active:transform-none transition-colors cursor-pointer"
+          className="absolute right-1.5 w-9 h-9 flex items-center justify-center rounded-lg text-slate-500 hover:text-[#15803d] hover:bg-[#f3fbf4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803d] active:scale-95 motion-reduce:active:transform-none transition-colors cursor-pointer"
           aria-pressed={isVisible}
           aria-label={isVisible ? "পাসওয়ার্ড লুকান" : "পাসওয়ার্ড দেখুন"}
         >
@@ -181,19 +158,24 @@ export function AuthPasswordField({
           )}
         </button>
       </div>
-      <FieldError className="text-xs text-red-700" />
+      <FieldError className="text-xs text-[#b91c1c]" />
     </TextField>
   );
 }
 
 export function AuthSuspenseFallback() {
   return (
-    <div className="min-h-[calc(100vh-140px)] bg-[#f8faf8] flex items-center justify-center">
+    <div
+      role="status"
+      aria-busy="true"
+      className="min-h-[50vh] bg-[#f8faf8] flex items-center justify-center"
+    >
       <Loader2
         size={28}
         aria-hidden="true"
-        className="animate-spin text-[#15803d]"
+        className="animate-spin motion-reduce:animate-none text-[#15803d]"
       />
+      <span className="sr-only">পৃষ্ঠা লোড হচ্ছে...</span>
     </div>
   );
 }

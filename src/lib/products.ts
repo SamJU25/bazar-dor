@@ -1,4 +1,10 @@
-import type { IMarketPrice, IPriceChange, IProduct } from "@/types/bazar";
+import type {
+  IMarketPrice,
+  IPriceChange,
+  IProduct,
+  IProductSummary,
+  ITickerItem,
+} from "@/types/bazar";
 
 export type SortOption = "default" | "price-asc" | "price-desc";
 export type DirectionFilter = "all" | IPriceChange["dir"];
@@ -18,16 +24,50 @@ export interface MarketSummary {
   costliestMarket?: IMarketPrice;
 }
 
+/** Strips heavy historical and per-market arrays before serializing product lists to client components. */
+export function toProductSummary(
+  product: IProduct | IProductSummary,
+): IProductSummary {
+  return {
+    id: product.id,
+    slug: product.slug,
+    nameBn: product.nameBn,
+    category: product.category,
+    categoryNameBn: product.categoryNameBn,
+    categoryIcon: product.categoryIcon,
+    unit: product.unit,
+    image: product.image,
+    today: product.today,
+    yesterday: product.yesterday,
+    change: product.change,
+  };
+}
+
+/** Strips product objects down to the exact fields needed by the live price ticker. */
+export function toTickerItem(
+  product: IProduct | IProductSummary | ITickerItem,
+): ITickerItem {
+  return {
+    id: product.id,
+    slug: product.slug,
+    nameBn: product.nameBn,
+    unit: product.unit,
+    image: product.image,
+    today: product.today,
+    change: product.change,
+  };
+}
+
 /** Filters products by search query, category, and price-change direction, then applies numeric sorting. */
-export function filterAndSortProducts(
-  products: readonly IProduct[],
+export function filterAndSortProducts<T extends IProductSummary>(
+  products: readonly T[],
   {
     query = "",
     category = "all",
     direction = "all",
     sortBy = "default",
   }: ProductFilterParams = {},
-): IProduct[] {
+): T[] {
   const normalized = query.trim().toLowerCase();
 
   let list = normalized
@@ -57,29 +97,31 @@ export function filterAndSortProducts(
 }
 
 /** Returns top price risers or fallers sorted by magnitude of percentage change. */
-export function getTopMovers(
-  products: readonly IProduct[],
+export function getTopMovers<T extends IProductSummary>(
+  products: readonly T[],
   dir: "up" | "down",
   limit = 5,
-): IProduct[] {
+): T[] {
   return products
     .filter((p) => p.change.dir === dir)
     .sort((a, b) => Math.abs(b.change.pct) - Math.abs(a.change.pct))
     .slice(0, limit);
 }
 
-export interface CategoryProductGroup {
+export interface CategoryProductGroup<
+  T extends IProductSummary = IProductSummary,
+> {
   category: string;
   categoryNameBn: string;
   categoryIcon: string;
-  items: IProduct[];
+  items: T[];
 }
 
 /** Groups products by category while preserving first-seen category order. */
-export function groupProductsByCategory(
-  products: readonly IProduct[],
-): CategoryProductGroup[] {
-  const groups = new Map<string, CategoryProductGroup>();
+export function groupProductsByCategory<T extends IProductSummary>(
+  products: readonly T[],
+): CategoryProductGroup<T>[] {
+  const groups = new Map<string, CategoryProductGroup<T>>();
   for (const product of products) {
     const existing = groups.get(product.category);
     if (existing) {
@@ -97,8 +139,8 @@ export function groupProductsByCategory(
 }
 
 /** Counts products across all price-movement directions. */
-export function getDirectionCounts(
-  products: readonly IProduct[],
+export function getDirectionCounts<T extends IProductSummary>(
+  products: readonly T[],
 ): Record<DirectionFilter, number> {
   const counts: Record<DirectionFilter, number> = {
     all: products.length,
@@ -153,7 +195,7 @@ const PRICE_CHANGE_STYLES: Record<
   Record<IPriceChange["dir"], string>
 > = {
   light: {
-    up: "bg-[#ecfdf5] text-[#15803d]",
+    up: "bg-[#ecfdf5] text-[#166534]",
     down: "bg-[#fff1f2] text-[#b91c1c]",
     flat: "bg-slate-100 text-slate-700",
   },

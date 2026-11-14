@@ -5,46 +5,47 @@ A daily essential commodity price tracking web application for Bangladesh built 
 ## Key Features
 
 1. **Navbar with Bangla Date and Live Price Ticker**
-   Displays the current Bangla date, category navigation with active-route highlighting, user session menu, and an infinite scrolling marquee ticker showing live price changes.
+   Displays the current Bangla date (updating past midnight), category navigation with active-route highlighting, user session menu, and an accessible CSS-animated marquee ticker with pause/scroll controls and reduced-motion support.
 2. **Home Page Price Overview**
-   Highlights the top 6 daily price risers, top 6 price fallers, and a responsive grid of all essential items with smooth anchor scrolling from the hero CTA.
+   Highlights the top 5 daily price risers, top 5 price fallers, and a filterable/searchable responsive grid of essential items with reduced-motion-safe anchor scrolling.
 3. **Category Filtering and Bengali Price Sorting**
-   Dedicated category pages (`/category/[slug]`) with loading skeletons, empty-state handling, and numeric sorting (`Default`, `Low to High`, `High to Low`).
+   Dedicated category pages (`/category/[slug]`) with static param generation, loading skeletons, empty-state handling, and numeric sorting (`Default`, `Low to High`, `High to Low`).
 4. **Protected Product Details and Market Breakdown**
    Authenticated `/product/[slug]` route showing today's price, historical comparison (yesterday, last week, last month), minimum/maximum/average summary, and a division-wise market table.
-5. **Authentication and Profile Management**
-   Powered by BetterAuth with MongoDB: email/password sign up and sign in, Google and Facebook OAuth, toast notifications on auth events and protected-route redirects, and a profile update page to edit user information.
-6. **Responsive Layout and Error Handling**
-   Adapts cleanly across mobile, tablet, and desktop screens, with segment loading skeletons, an error boundary, and a custom 404 page.
+5. **Authentication, Rate Limiting, and Profile Management**
+   Powered by BetterAuth with MongoDB: database-backed rate limits, email/password sign up and sign in, Google and Facebook OAuth, toast notifications on auth events and protected-route redirects, and a server-gated profile & update flow.
+6. **Operational Readiness & Security**
+   Security response headers (`X-Frame-Options`, `CSP`, `HSTS`), `/api/health` database readiness probe, `robots.txt`, dynamic `sitemap.xml`, web `manifest.webmanifest`, and resilient error/global-error boundaries.
 
 ## Technologies Used
 
-- **Next.js (App Router):** Server/Client components, dynamic routes, and request proxy middleware
-- **React & TypeScript:** Type-safe UI components and API models
-- **Tailwind CSS v4 & HeroUI:** Responsive layout and UI primitives
-- **BetterAuth & MongoDB:** Session management, email/password auth, and Google/Facebook social login
+- **Next.js (App Router):** Server/Client components, dynamic routes, ISR, and cookie proxy middleware
+- **React & TypeScript:** Strict type-safe UI components and API projections
+- **Tailwind CSS v4 & HeroUI (selective styles):** Responsive layout and accessible primitives
+- **BetterAuth & MongoDB:** Session management, rate limiting, email/password auth, and Google/Facebook social login
 - **Lucide React:** Icons
-- **React Hot Toast:** Auth and redirect notifications
-- **React Fast Marquee:** Live price ticker strip
+- **React Hot Toast:** Lazy-loaded auth and redirect notifications
 
 ## Getting Started Locally
 
-1. Install dependencies:
+1. Ensure Node.js `>=22.6.0`, then install dependencies:
    ```bash
    npm install
    ```
 
-2. Create `.env.local` from `.env.example` and add your MongoDB URI, BetterAuth secret/URL, and OAuth credentials:
+2. Create `.env.local` from `.env.example` and set `MONGO_URI`, `BETTER_AUTH_SECRET` (>= 32 chars), `BETTER_AUTH_URL`, and OAuth credentials (production Vercel deployments should set `BETTER_AUTH_URL` scoped to **Production**):
    ```bash
    cp .env.example .env.local
    ```
 
-3. Run the development server:
+3. Run checks, tests, or start development:
    ```bash
+   npm run typecheck
+   npm test
    npm run dev
    ```
 
-4. Build for production:
+4. Build and verify production locally:
    ```bash
    npm run build
    npm start

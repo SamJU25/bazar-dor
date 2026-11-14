@@ -1,9 +1,8 @@
 import {
   type DirectionFilter,
   type SortOption,
-  filterAndSortProducts,
 } from "./products.ts";
-import type { IProduct } from "../types/bazar.ts";
+import type { IProductSummary } from "../types/bazar.ts";
 
 /** Explicit lifecycle for single-shot async form submissions and mutations. */
 export type AsyncActionState =
@@ -110,6 +109,7 @@ export type CatalogFilterEvent =
   | { type: "SET_CATEGORY"; category: string }
   | { type: "SET_DIRECTION"; direction: DirectionFilter }
   | { type: "SET_SORT"; sortBy: SortOption }
+  | { type: "HYDRATE_FROM_URL"; state: CatalogFilterState }
   | { type: "RESET_FILTERS" };
 
 export function catalogFilterReducer(
@@ -125,6 +125,8 @@ export function catalogFilterReducer(
       return { ...state, direction: event.direction };
     case "SET_SORT":
       return { ...state, sortBy: event.sortBy };
+    case "HYDRATE_FROM_URL":
+      return event.state;
     case "RESET_FILTERS":
       return INITIAL_CATALOG_FILTER_STATE;
   }
@@ -136,19 +138,22 @@ export type CatalogViewStatus =
   | "empty-filtered"
   | "populated";
 
-export interface DerivedCatalogView {
+export interface DerivedCatalogView<
+  T extends IProductSummary = IProductSummary,
+> {
   status: CatalogViewStatus;
-  searchMatchedProducts: IProduct[];
-  visibleProducts: IProduct[];
+  searchMatchedProducts: T[];
+  visibleProducts: T[];
   hasActiveFilters: boolean;
 }
 
-/** Derives unambiguous catalog UI states so upstream outages and empty filters never collide. */
-export function deriveCatalogView(
-  products: IProduct[],
+/** Derives unambiguous catalog UI states in a single pass over the product list. */
+export function deriveCatalogView<T extends IProductSummary>(
+  products: readonly T[],
   filterState: CatalogFilterState,
-): DerivedCatalogView {
+): DerivedCatalogView<T> {
   const trimmedQuery = filterState.query.trim();
+  const normalizedQuery = trimmedQuery.toLowerCase();
   const hasActiveFilters =
     trimmedQuery !== "" ||
     filterState.category !== "all" ||
@@ -164,10 +169,35 @@ export function deriveCatalogView(
     };
   }
 
-  const searchMatchedProducts = filterAndSortProducts(products, {
-    query: trimmedQuery,
-    category: filterState.category,
-  });
+  const searchMatchedProducts: T[] = [];
+  const visibleProducts: T[] = [];
+
+  for (const product of products) {
+    if (
+      filterState.category !== "all" &&
+      product.category !== filterState.category
+    ) {
+      continue;
+    }
+
+    if (
+      normalizedQuery &&
+      !product.nameBn.toLowerCase().includes(normalizedQuery) &&
+      !product.categoryNameBn.toLowerCase().includes(normalizedQuery) &&
+      !product.slug.toLowerCase().includes(normalizedQuery)
+    ) {
+      continue;
+    }
+
+    searchMatchedProducts.push(product);
+
+    if (
+      filterState.direction === "all" ||
+      product.change.dir === filterState.direction
+    ) {
+      visibleProducts.push(product);
+    }
+  }
 
   if (searchMatchedProducts.length === 0) {
     return {
@@ -178,10 +208,11 @@ export function deriveCatalogView(
     };
   }
 
-  const visibleProducts = filterAndSortProducts(searchMatchedProducts, {
-    direction: filterState.direction,
-    sortBy: filterState.sortBy,
-  });
+  if (filterState.sortBy === "price-asc") {
+    visibleProducts.sort((a, b) => Number(a.today) - Number(b.today));
+  } else if (filterState.sortBy === "price-desc") {
+    visibleProducts.sort((a, b) => Number(b.today) - Number(a.today));
+  }
 
   return {
     status: visibleProducts.length === 0 ? "empty-filtered" : "populated",

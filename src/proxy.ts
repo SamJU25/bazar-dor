@@ -1,18 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "@/lib/auth";
+import { getSessionCookie } from "better-auth/cookies";
 import { buildAuthUrl } from "@/lib/auth-helpers";
 
-export async function proxy(request: NextRequest) {
-  const session = await getServerSession(request.headers);
+/** Edge-fast cookie presence gate; protected pages re-verify session against MongoDB. */
+export function proxy(request: NextRequest) {
+  const sessionCookie = getSessionCookie(request);
 
-  if (!session) {
+  if (!sessionCookie) {
     const callbackTarget = `${request.nextUrl.pathname}${request.nextUrl.search}`;
     const signInPath = buildAuthUrl(
       "/signin",
       callbackTarget,
       "auth_required",
     );
-    return NextResponse.redirect(new URL(signInPath, request.url));
+    const parsedSignIn = new URL(signInPath, "https://app.invalid");
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = parsedSignIn.pathname;
+    redirectUrl.search = parsedSignIn.search;
+    return NextResponse.redirect(redirectUrl);
   }
 
   return NextResponse.next();

@@ -7,6 +7,8 @@ import {
   getDirectionCounts,
   getTopMovers,
   groupProductsByCategory,
+  toProductSummary,
+  toTickerItem,
 } from "../src/lib/products.ts";
 
 function makeProduct(overrides: Partial<IProduct>): IProduct {
@@ -189,5 +191,33 @@ describe("groupProductsByCategory", () => {
         { category: "mach", slugs: ["ilish"] },
       ],
     );
+  });
+});
+
+describe("product projections", () => {
+  it("strips heavy market arrays and historical fields in summary and ticker projections", () => {
+    const full = makeProduct({
+      id: 9,
+      slug: "soyabin",
+      nameBn: "সয়াবিন তেল",
+      today: 175,
+      yesterday: 172,
+      lastWeek: 170,
+      lastMonth: 165,
+      markets: [{ market: "নিউ মার্কেট", division: "ঢাকা", min: 173, max: 178 }],
+    });
+
+    const summary = toProductSummary(full);
+    assert.equal("markets" in summary, false);
+    assert.equal("lastWeek" in summary, false);
+    assert.equal(summary.yesterday, 172);
+    assert.equal(summary.today, 175);
+
+    const ticker = toTickerItem(full);
+    assert.equal("markets" in ticker, false);
+    assert.equal("yesterday" in ticker, false);
+    assert.equal("category" in ticker, false);
+    assert.equal(ticker.slug, "soyabin");
+    assert.equal(ticker.today, 175);
   });
 });

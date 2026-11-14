@@ -2,6 +2,7 @@ import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import {
   buildAuthUrl,
+  formatAuthActionError,
   formatOAuthErrorMessage,
   getSafeCallbackUrl,
   getUserInitials,
@@ -18,7 +19,7 @@ describe("getSafeCallbackUrl", () => {
     );
   });
 
-  it("rejects external, protocol-relative, backslash, and empty URLs", () => {
+  it("rejects external, protocol-relative, backslash, encoded, control-char, and empty URLs", () => {
     assert.equal(getSafeCallbackUrl(null), "/");
     assert.equal(getSafeCallbackUrl(undefined), "/");
     assert.equal(getSafeCallbackUrl(""), "/");
@@ -26,7 +27,11 @@ describe("getSafeCallbackUrl", () => {
     assert.equal(getSafeCallbackUrl("https://evil.com/phish"), "/");
     assert.equal(getSafeCallbackUrl("http://localhost:9999"), "/");
     assert.equal(getSafeCallbackUrl("//evil.com"), "/");
+    assert.equal(getSafeCallbackUrl("///evil.com"), "/");
     assert.equal(getSafeCallbackUrl("/\\evil.com"), "/");
+    assert.equal(getSafeCallbackUrl("/%2f/evil.com"), "/");
+    assert.equal(getSafeCallbackUrl("/%5cevil.com"), "/");
+    assert.equal(getSafeCallbackUrl("/product\r\nSet-Cookie"), "/");
     assert.equal(getSafeCallbackUrl("javascript:alert(1)"), "/");
   });
 });
@@ -91,19 +96,21 @@ describe("resolveBaseUrl & resolveTrustedOrigins", () => {
     const origins = resolveTrustedOrigins({
       BETTER_AUTH_URL: "https://bazar-dor-sable-six.vercel.app/",
       NEXT_PUBLIC_BETTER_AUTH_URL: "https://bazar-dor-sable-six.vercel.app",
+      VERCEL_BRANCH_URL: "bazar-dor-git-feature.vercel.app",
       VERCEL_URL: "bazar-dor-preview.vercel.app",
       VERCEL_PROJECT_PRODUCTION_URL: "bazar-dor-sable-six.vercel.app",
     });
 
     assert.deepEqual(origins, [
       "https://bazar-dor-sable-six.vercel.app",
+      "https://bazar-dor-git-feature.vercel.app",
       "https://bazar-dor-preview.vercel.app",
     ]);
   });
 });
 
-describe("formatOAuthErrorMessage", () => {
-  it("returns null for empty values and maps known BetterAuth codes", () => {
+describe("formatOAuthErrorMessage & formatAuthActionError", () => {
+  it("returns null for empty values, maps known codes, and blocks reflected prose", () => {
     assert.equal(formatOAuthErrorMessage(null), null);
     assert.equal(formatOAuthErrorMessage("   "), null);
     assert.match(
@@ -113,6 +120,23 @@ describe("formatOAuthErrorMessage", () => {
     assert.match(
       formatOAuthErrorMessage("custom_error_code") ?? "",
       /custom_error_code/,
+    );
+    const unsafe = formatOAuthErrorMessage("Click evil.com now") ?? "";
+    assert.doesNotMatch(unsafe, /evil\.com/);
+  });
+
+  it("localizes common BetterAuth action errors cleanly", () => {
+    assert.equal(
+      formatAuthActionError("Invalid email or password", "fallback"),
+      "ইমেইল বা পাসওয়ার্ড সঠিক নয়",
+    );
+    assert.equal(
+      formatAuthActionError("User already exists", "fallback"),
+      "এই ইমেইল দিয়ে আগেই অ্যাকাউন্ট তৈরি করা হয়েছে",
+    );
+    assert.equal(
+      formatAuthActionError("Unknown internal error", "ব্যর্থ হয়েছে"),
+      "ব্যর্থ হয়েছে",
     );
   });
 });

@@ -3,10 +3,10 @@
 import { Minus, TrendingDown, TrendingUp } from "lucide-react";
 import BnNumber from "@/components/BnNumber";
 import { type DirectionFilter, getDirectionCounts } from "@/lib/products";
-import type { IProduct } from "@/types/bazar";
+import type { IProductSummary } from "@/types/bazar";
 
 interface DirectionFilterBarProps {
-  products: IProduct[];
+  products: IProductSummary[];
   value: DirectionFilter;
   onChange: (next: DirectionFilter) => void;
 }
@@ -26,7 +26,7 @@ const FILTER_OPTIONS: {
     id: "up",
     label: "দাম বেড়েছে",
     activeClass:
-      "bg-white text-[#15803d] border-[#b7dfc2] shadow-[0_1px_2px_rgba(22,34,24,0.08)] font-semibold",
+      "bg-white text-[#166534] border-[#b7dfc2] shadow-[0_1px_2px_rgba(22,34,24,0.08)] font-semibold",
   },
   {
     id: "down",
@@ -68,7 +68,7 @@ export default function DirectionFilterBar({
             disabled={isDisabled}
             aria-pressed={isActive}
             onClick={() => onChange(option.id)}
-            className={`inline-flex items-center gap-1.5 h-10 sm:h-9 px-3.5 sm:px-3 rounded-lg border text-xs sm:text-sm leading-snug whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803d]/40 active:scale-[0.985] motion-reduce:active:transform-none transition-[background-color,border-color,color,box-shadow,transform] duration-150 shrink-0 ${
+            className={`inline-flex items-center gap-1.5 h-10 sm:h-9 px-3.5 sm:px-3 rounded-lg border text-xs sm:text-sm leading-snug whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803d] active:scale-[0.985] motion-reduce:active:transform-none transition-[background-color,border-color,color,box-shadow,transform] duration-150 shrink-0 ${
               isActive
                 ? option.activeClass
                 : "border-transparent text-[#334155] hover:bg-white/80 hover:text-[#162218] font-medium"
@@ -103,7 +103,7 @@ export default function DirectionFilterBar({
             <BnNumber
               value={count}
               className={`text-[11px] sm:text-xs font-semibold ${
-                isActive ? "opacity-80" : "text-slate-600"
+                isActive ? "text-current" : "text-slate-600"
               }`}
             />
           </button>

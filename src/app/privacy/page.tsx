@@ -3,14 +3,17 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "গোপনীয়তা নীতি | বাজার দর",
+  title: "গোপনীয়তা নীতি",
   description:
-    "বাজার দর অ্যাপ্লিকেশনের গোপনীয়তা নীতি এবং ব্যবহারকারীর তথ্য মুছে ফেলার নির্দেশনা।",
+    "বাজার দর অ্যাপ্লিকেশনের গোপনীয়তা নীতি, সেশন কুকি এবং ব্যবহারকারীর তথ্য মুছে ফেলার নির্দেশনা।",
+  alternates: {
+    canonical: "/privacy",
+  },
 };
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="min-h-[calc(100vh-140px)] w-full bg-[#f8faf8] py-8 sm:py-10 px-4 sm:px-6 lg:px-10 xl:px-12">
+    <div className="w-full bg-[#f8faf8] py-8 sm:py-10 px-4 sm:px-6 lg:px-10 xl:px-12">
       <div className="max-w-3xl mx-auto space-y-5">
         <Link href="/" className="link-back text-xs sm:text-sm">
           <ArrowLeft size={15} aria-hidden="true" />
@@ -54,11 +57,14 @@ export default function PrivacyPolicyPage() {
 
           <section className="space-y-2">
             <h2 className="text-lg font-bold text-[#162218]">
-              ৩. কুকি ও সেশন নিরাপত্তা
+              ৩. কুকি, নিরাপত্তা ও অবকাঠামো সেবা
             </h2>
             <p className="text-sm text-slate-700 leading-relaxed">
-              সাইন-ইন অবস্থা ধরে রাখার জন্য প্রয়োজনীয় এনক্রিপ্টেড সেশন কুকি
-              ব্যবহার করা হয়। আপনি যেকোনো সময় নেভিগেশন মেনু থেকে সাইন আউট করে
+              সাইন-ইন অবস্থা ধরে রাখার জন্য প্রয়োজনীয় সুরক্ষিত HTTP-only সেশন
+              কুকি (<code>better-auth.session_token</code>) এবং নিরাপত্তা রেট-লিমিট
+              লগ ব্যবহার করা হয়। আমাদের সেবা পরিচালনার জন্য Vercel (হোস্টিং),
+              MongoDB Atlas (ডেটাবেস) এবং ঐচ্ছিক Google বা Facebook OAuth সেবা
+              ব্যবহৃত হতে পারে। আপনি যেকোনো সময় নেভিগেশন মেনু থেকে সাইন আউট করে
               আপনার বর্তমান সেশন শেষ করতে পারেন।
             </p>
           </section>
@@ -81,10 +87,11 @@ export default function PrivacyPolicyPage() {
               পাতা থেকে আপনার নাম পরিবর্তন করতে পারেন।
             </p>
             <p className="text-sm text-slate-700 leading-relaxed">
-              Facebook লগইন সংযোগ বিচ্ছিন্ন করতে ও আপনার অনুমতি প্রত্যাহার করতে:
+              অ্যাকাউন্ট মুছে ফেলার অনুরোধ বা সোশ্যাল লগইন সংযোগ বিচ্ছিন্ন করতে:
               Facebook-এর <strong>Settings &amp; Privacy → Settings → Apps and
-              Websites</strong> এ গিয়ে <strong>BazarDor</strong> নির্বাচন করে{" "}
-              <strong>Remove</strong> বাটনে ক্লিক করুন।
+              Websites</strong> অথবা Google Account-এর{" "}
+              <strong>Security → Third-party apps</strong> থেকে{" "}
+              <strong>BazarDor</strong> নির্বাচন করে অ্যাক্সেস প্রত্যাহার করুন।
             </p>
           </section>
         </article>

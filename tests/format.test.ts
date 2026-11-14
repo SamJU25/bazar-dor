@@ -16,6 +16,8 @@ describe("format utilities", () => {
     assert.equal(formatPriceBn(148), "৳ ১৪৮");
     assert.equal(formatPriceBn(1850), "৳ ১,৮৫০");
     assert.equal(formatPriceBn(148.5, 1), "৳ ১৪৮.৫");
+    assert.equal(formatBnNumber(Number.NaN), "০");
+    assert.equal(formatPriceBn(Number.POSITIVE_INFINITY), "৳ ০");
   });
 
   it("maps units to full and short Bengali labels with safe fallback", () => {

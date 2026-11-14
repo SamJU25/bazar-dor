@@ -76,65 +76,74 @@ export default function ProductMarketsSection({
       ) : (
         <>
           <div className="hidden md:block bg-white rounded-2xl border border-[#dce6dc] overflow-hidden">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-[#f3fbf4] border-b border-[#dce6dc] text-xs font-semibold text-[#15803d]">
-                  <th scope="col" className="py-3 px-5">বাজার</th>
-                  <th scope="col" className="py-3 px-5">বিভাগ</th>
-                  <th scope="col" className="py-3 px-5">পরিসর</th>
-                  <th scope="col" className="py-3 px-5 text-right">সর্বনিম্ন</th>
-                  <th scope="col" className="py-3 px-5 text-right">সর্বাধিক</th>
-                  <th scope="col" className="py-3 px-5 text-right">গড়</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#e8efe8] text-sm">
-                {marketRows.map((m, idx) => (
-                  <tr
-                    key={`${m.market}-${idx}`}
-                    className="hover:bg-[#f8faf8] transition-colors"
-                  >
-                    <td className="py-3.5 px-5 font-semibold text-[#162218]">
-                      {m.market}
-                    </td>
-                    <td className="py-3.5 px-5 text-slate-600 text-xs font-medium">
-                      <span className="inline-flex items-center gap-1">
-                        <MapPin size={12} aria-hidden="true" />
-                        {m.division}
-                      </span>
-                    </td>
-                    <td className="py-3.5 px-5 w-44">
-                      <div
-                        aria-hidden="true"
-                        className="relative h-1.5 rounded-full bg-[#eef3ee] overflow-hidden"
-                      >
-                        <div
-                          className="absolute top-0 bottom-0 rounded-full bg-[#15803d]"
-                          style={{
-                            left: `${m.leftPct}%`,
-                            width: `${m.widthPct}%`,
-                          }}
-                        />
-                      </div>
-                    </td>
-                    <td className="py-3.5 px-5 text-right font-semibold text-[#15803d] tabular-nums">
-                      <PriceAmount value={m.min} />
-                    </td>
-                    <td className="py-3.5 px-5 text-right font-semibold text-[#b91c1c] tabular-nums">
-                      <PriceAmount value={m.max} />
-                    </td>
-                    <td className="py-3.5 px-5 text-right font-semibold text-[#162218] tabular-nums">
-                      <PriceAmount value={m.avg} fractionDigits={1} />
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <caption className="sr-only">
+                  বাজারভিত্তিক সর্বনিম্ন, সর্বাধিক ও গড় দামের তালিকা
+                </caption>
+                <thead>
+                  <tr className="bg-[#f3fbf4] border-b border-[#dce6dc] text-xs font-semibold text-[#15803d]">
+                    <th scope="col" className="py-3 px-5">বাজার</th>
+                    <th scope="col" className="py-3 px-5">বিভাগ</th>
+                    <th scope="col" className="py-3 px-5">পরিসর</th>
+                    <th scope="col" className="py-3 px-5 text-right">সর্বনিম্ন</th>
+                    <th scope="col" className="py-3 px-5 text-right">সর্বাধিক</th>
+                    <th scope="col" className="py-3 px-5 text-right">গড়</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-[#e8efe8] text-sm">
+                  {marketRows.map((m, idx) => (
+                    <tr
+                      key={`${m.division}-${m.market}-${idx}`}
+                      className="hover:bg-[#f8faf8] transition-colors"
+                    >
+                      <td className="py-3.5 px-5 font-semibold text-[#162218]">
+                        {m.market}
+                      </td>
+                      <td className="py-3.5 px-5 text-slate-600 text-xs font-medium">
+                        <span className="inline-flex items-center gap-1">
+                          <MapPin size={12} aria-hidden="true" />
+                          {m.division}
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-5 w-44">
+                        <span className="sr-only">
+                          <PriceAmount value={m.min} /> থেকে{" "}
+                          <PriceAmount value={m.max} />
+                        </span>
+                        <div
+                          aria-hidden="true"
+                          className="relative h-1.5 rounded-full bg-[#eef3ee] overflow-hidden"
+                        >
+                          <div
+                            className="absolute top-0 bottom-0 rounded-full bg-[#15803d]"
+                            style={{
+                              left: `${m.leftPct}%`,
+                              width: `${m.widthPct}%`,
+                            }}
+                          />
+                        </div>
+                      </td>
+                      <td className="py-3.5 px-5 text-right font-semibold text-[#15803d] tabular-nums">
+                        <PriceAmount value={m.min} />
+                      </td>
+                      <td className="py-3.5 px-5 text-right font-semibold text-[#b91c1c] tabular-nums">
+                        <PriceAmount value={m.max} />
+                      </td>
+                      <td className="py-3.5 px-5 text-right font-semibold text-[#162218] tabular-nums">
+                        <PriceAmount value={m.avg} fractionDigits={1} />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:hidden">
             {marketRows.map((m, idx) => (
               <div
-                key={`${m.market}-${idx}`}
+                key={`${m.division}-${m.market}-${idx}`}
                 className="bg-white rounded-2xl border border-[#dce6dc] p-4 space-y-3"
               >
                 <div className="flex items-start justify-between gap-2">

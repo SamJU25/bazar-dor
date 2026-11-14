@@ -1,11 +1,15 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { Noto_Sans_Bengali } from "next/font/google";
-import { Toaster } from "react-hot-toast";
+import ClientToaster from "@/components/ClientToaster";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-import PriceTicker from "@/components/PriceTicker";
-import { getCategories, getProducts } from "@/lib/api";
+import PriceTickerSection, {
+  PriceTickerSkeleton,
+} from "@/components/PriceTickerSection";
+import { getCachedCategories } from "@/lib/catalog";
 import { formatDhakaDateBn } from "@/lib/format";
+import { getSiteUrl } from "@/lib/site";
 import "./globals.css";
 
 const notoSansBengali = Noto_Sans_Bengali({
@@ -14,10 +18,32 @@ const notoSansBengali = Noto_Sans_Bengali({
   variable: "--font-noto-bengali",
 });
 
+const SITE_DESCRIPTION =
+  "বাংলাদেশের নিত্যপ্রয়োজনীয় পণ্য: চাল, ডাল, তেল, সবজি, মাছ, মাংস, ডিম ও মসলার আজকের বাজারদর, দামের পরিবর্তন এবং বাজারভিত্তিক তুলনা।";
+
 export const metadata: Metadata = {
-  title: "বাজার দর | প্রতিদিনের নিত্যপণ্যের হালনাগাদ দাম",
-  description:
-    "বাংলাদেশের নিত্যপ্রয়োজনীয় পণ্য: চাল, ডাল, তেল, সবজি, মাছ, মাংস, ডিম ও মসলার আজকের বাজারদর, দামের পরিবর্তন এবং বাজারভিত্তিক তুলনা।",
+  metadataBase: getSiteUrl(),
+  title: {
+    default: "বাজার দর | প্রতিদিনের নিত্যপণ্যের হালনাগাদ দাম",
+    template: "%s | বাজার দর",
+  },
+  description: SITE_DESCRIPTION,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "bn_BD",
+    siteName: "বাজার দর",
+    title: "বাজার দর | প্রতিদিনের নিত্যপণ্যের হালনাগাদ দাম",
+    description: SITE_DESCRIPTION,
+    url: "/",
+  },
+  twitter: {
+    card: "summary",
+    title: "বাজার দর | প্রতিদিনের নিত্যপণ্যের হালনাগাদ দাম",
+    description: SITE_DESCRIPTION,
+  },
   icons: {
     icon: "/icon.svg",
   },
@@ -28,11 +54,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [categories, products] = await Promise.all([
-    getCategories(),
-    getProducts(),
-  ]);
-
+  const categories = await getCachedCategories();
   const initialDate = formatDhakaDateBn();
 
   return (
@@ -48,24 +70,14 @@ export default async function RootLayout({
           মূল বিষয়বস্তুতে যান
         </a>
         <Navbar categories={categories} initialDate={initialDate} />
-        <PriceTicker products={products} />
+        <Suspense fallback={<PriceTickerSkeleton />}>
+          <PriceTickerSection />
+        </Suspense>
         <main id="main-content" className="flex-1">
           {children}
         </main>
         <Footer />
-        <Toaster
-          position="top-center"
-          toastOptions={{
-            duration: 3500,
-            style: {
-              borderRadius: "14px",
-              background: "#162218",
-              color: "#ffffff",
-              fontSize: "14px",
-              fontWeight: 600,
-            },
-          }}
-        />
+        <ClientToaster />
       </body>
     </html>
   );

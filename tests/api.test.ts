@@ -1,9 +1,12 @@
 import { describe, it, afterEach } from "node:test";
 import assert from "node:assert/strict";
 import {
+  CatalogUnavailableError,
   getCategories,
   getCategoryBySlug,
+  getCategoryPageData,
   getProductBySlugOrId,
+  getProductBySlugOrIdStrict,
   getProducts,
 } from "../src/lib/api.ts";
 
@@ -94,5 +97,44 @@ describe("api helpers", () => {
       "sorno-machi-chal",
     );
     assert.equal(await getProductBySlugOrId("missing-slug"), null);
+  });
+
+  it("throws CatalogUnavailableError on strict loaders when all endpoints fail", async () => {
+    globalThis.fetch = (async () =>
+      new Response("Server Error", { status: 500 })) as typeof fetch;
+
+    await assert.rejects(
+      () => getCategoryPageData("chal"),
+      CatalogUnavailableError,
+    );
+    await assert.rejects(
+      () => getProductBySlugOrIdStrict("alu"),
+      CatalogUnavailableError,
+    );
+  });
+
+  it("returns null category or product on strict loaders when upstream is healthy but slug misses", async () => {
+    globalThis.fetch = (async (input: string | URL | Request) => {
+      const url = String(input);
+      if (url.includes("/categories")) {
+        return new Response(
+          JSON.stringify([
+            { id: "chal", slug: "chal", nameBn: "চাল", icon: "🍚" },
+            { broken: true },
+          ]),
+          { status: 200 },
+        );
+      }
+      return new Response(JSON.stringify([{ badRecord: true }]), {
+        status: 200,
+      });
+    }) as typeof fetch;
+
+    const categoryResult = await getCategoryPageData("missing");
+    assert.equal(categoryResult.category, null);
+    assert.equal(categoryResult.categories.length, 1);
+
+    const productResult = await getProductBySlugOrIdStrict("missing-item");
+    assert.equal(productResult, null);
   });
 });

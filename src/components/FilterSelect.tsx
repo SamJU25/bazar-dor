@@ -39,7 +39,7 @@ export default function FilterSelect({
     >
       <Select.Trigger
         id={id}
-        className="w-full min-w-[9.25rem] h-11 sm:h-10 pl-3.5 pr-9 rounded-xl bg-white border border-[#7f9484] text-base sm:text-sm font-medium text-[#162218] shadow-none focus:outline-none focus-visible:outline-none data-[hovered=true]:bg-white data-[hovered=true]:border-[#15803d] data-[open=true]:border-[#15803d] data-[open=true]:ring-2 data-[open=true]:ring-[#15803d]/20 data-[focus-visible=true]:outline-none data-[focus-visible=true]:border-[#15803d] data-[focus-visible=true]:ring-2 data-[focus-visible=true]:ring-[#15803d]/20 transition-colors cursor-pointer"
+        className="w-full min-w-[9.25rem] h-11 sm:h-10 pl-3.5 pr-9 rounded-xl bg-white border border-[#7f9484] text-base sm:text-sm font-medium text-[#162218] shadow-none focus:outline-none focus-visible:outline-none data-[hovered=true]:bg-white data-[hovered=true]:border-[#15803d] data-[open=true]:border-[#15803d] data-[open=true]:ring-2 data-[open=true]:ring-[#15803d]/25 data-[focus-visible=true]:outline-none data-[focus-visible=true]:border-[#15803d] data-[focus-visible=true]:ring-2 data-[focus-visible=true]:ring-[#15803d] transition-colors cursor-pointer"
       >
         <Select.Value className="text-base sm:text-sm font-medium text-[#162218] truncate" />
         <Select.Indicator className="end-3 text-slate-500">
