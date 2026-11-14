@@ -75,10 +75,10 @@ function MoverPanel({
           <button
             type="button"
             onClick={onViewAll}
-            className={`inline-flex items-center gap-1 text-xs sm:text-sm font-semibold transition-colors shrink-0 cursor-pointer ${
+            className={`inline-flex items-center gap-1 px-2 py-1 -my-1 -mr-2 rounded-lg text-xs sm:text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803d]/40 transition-colors shrink-0 cursor-pointer ${
               tone === "up"
-                ? "text-[#15803d] hover:text-[#166534]"
-                : "text-[#b91c1c] hover:text-[#991b1b]"
+                ? "text-[#15803d] hover:text-[#166534] hover:bg-[#f3fbf4]"
+                : "text-[#b91c1c] hover:text-[#991b1b] hover:bg-[#fff1f2]"
             }`}
           >
             <span>
@@ -295,7 +295,7 @@ export default function HomeSections({ products }: { products: IProduct[] }) {
                     type="button"
                     onClick={() => dispatch({ type: "SET_QUERY", query: "" })}
                     aria-label="খোঁজা মুছুন"
-                    className="absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-lg text-slate-500 hover:text-[#162218] hover:bg-slate-100 transition-colors cursor-pointer"
+                    className="absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-lg text-slate-500 hover:text-[#15803d] hover:bg-[#f3fbf4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803d]/35 active:scale-95 motion-reduce:active:transform-none transition-colors cursor-pointer"
                   >
                     <X size={15} aria-hidden="true" />
                   </button>

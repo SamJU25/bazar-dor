@@ -119,7 +119,11 @@ export default function PriceTicker({ products }: PriceTickerProps) {
             onClick={() => setIsPaused((prev) => !prev)}
             aria-pressed={!isPlaying}
             aria-label={isPlaying ? "লাইভ দর থামান" : "লাইভ দর চালু করুন"}
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-300 hover:text-white hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 transition-colors cursor-pointer"
+            className={`w-9 h-9 rounded-lg border flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 active:scale-95 motion-reduce:active:transform-none transition-colors cursor-pointer ${
+              !isPlaying
+                ? "bg-white/15 border-white/15 text-emerald-300"
+                : "border-transparent text-slate-300 hover:text-white hover:bg-white/10"
+            }`}
           >
             {isPlaying ? (
               <Pause size={14} aria-hidden="true" />

@@ -127,10 +127,7 @@ export default function UpdateProfilePage() {
   return (
     <div className="min-h-[calc(100vh-140px)] w-full flex flex-col items-center justify-center bg-[#f8faf8] px-4 py-10">
       <div className="w-full max-w-[440px] space-y-5">
-        <Link
-          href="/profile"
-          className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-600 hover:text-[#15803d] transition-colors"
-        >
+        <Link href="/profile" className="link-back text-xs sm:text-sm">
           <ArrowLeft size={15} aria-hidden="true" />
           <span>প্রোফাইলে ফিরে যান</span>
         </Link>

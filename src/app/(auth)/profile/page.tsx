@@ -38,10 +38,7 @@ export default function ProfilePage() {
       className="min-h-[calc(100vh-140px)] w-full bg-[#f8faf8] px-4 py-10"
     >
       <div className="max-w-xl mx-auto space-y-6">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-600 hover:text-[#15803d] transition-colors"
-        >
+        <Link href="/" className="link-back text-xs sm:text-sm">
           <ArrowLeft size={15} aria-hidden="true" />
           <span>হোম পেজে ফিরে যান</span>
         </Link>

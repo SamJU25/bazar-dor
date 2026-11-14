@@ -68,13 +68,13 @@ export default function DirectionFilterBar({
             disabled={isDisabled}
             aria-pressed={isActive}
             onClick={() => onChange(option.id)}
-            className={`inline-flex items-center gap-1.5 h-10 sm:h-9 px-3.5 sm:px-3 rounded-lg border text-xs sm:text-sm leading-snug whitespace-nowrap transition-colors shrink-0 ${
+            className={`inline-flex items-center gap-1.5 h-10 sm:h-9 px-3.5 sm:px-3 rounded-lg border text-xs sm:text-sm leading-snug whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803d]/40 active:scale-[0.985] motion-reduce:active:transform-none transition-[background-color,border-color,color,box-shadow,transform] duration-150 shrink-0 ${
               isActive
                 ? option.activeClass
                 : "border-transparent text-[#334155] hover:bg-white/80 hover:text-[#162218] font-medium"
             } ${
               isDisabled
-                ? "opacity-45 cursor-not-allowed hover:bg-transparent"
+                ? "opacity-45 cursor-not-allowed hover:bg-transparent active:transform-none"
                 : "cursor-pointer"
             }`}
           >

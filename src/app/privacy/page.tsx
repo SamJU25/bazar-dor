@@ -12,10 +12,7 @@ export default function PrivacyPolicyPage() {
   return (
     <div className="min-h-[calc(100vh-140px)] w-full bg-[#f8faf8] py-8 sm:py-10 px-4 sm:px-6 lg:px-10 xl:px-12">
       <div className="max-w-3xl mx-auto space-y-5">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-slate-600 hover:text-[#15803d] transition-colors w-fit"
-        >
+        <Link href="/" className="link-back text-xs sm:text-sm">
           <ArrowLeft size={15} aria-hidden="true" />
           <span>হোম পেজে ফিরে যান</span>
         </Link>

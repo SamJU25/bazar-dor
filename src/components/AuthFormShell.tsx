@@ -87,10 +87,7 @@ export function AuthPageShell({
   return (
     <div className="min-h-[calc(100vh-140px)] w-full flex flex-col items-center justify-center bg-[#f8faf8] px-4 py-8 sm:py-10">
       <div className="w-full max-w-[440px] space-y-4">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-slate-600 hover:text-[#15803d] transition-colors w-fit"
-        >
+        <Link href="/" className="link-back text-xs sm:text-sm">
           <ArrowLeft size={15} aria-hidden="true" />
           <span>হোম পেজে ফিরে যান</span>
         </Link>
@@ -173,7 +170,7 @@ export function AuthPasswordField({
         <button
           type="button"
           onClick={() => setIsVisible((prev) => !prev)}
-          className="absolute right-1.5 w-9 h-9 flex items-center justify-center rounded-lg text-slate-500 hover:text-[#15803d] hover:bg-[#f3fbf4] transition-colors cursor-pointer"
+          className="absolute right-1.5 w-9 h-9 flex items-center justify-center rounded-lg text-slate-500 hover:text-[#15803d] hover:bg-[#f3fbf4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803d]/35 active:scale-95 motion-reduce:active:transform-none transition-colors cursor-pointer"
           aria-pressed={isVisible}
           aria-label={isVisible ? "পাসওয়ার্ড লুকান" : "পাসওয়ার্ড দেখুন"}
         >

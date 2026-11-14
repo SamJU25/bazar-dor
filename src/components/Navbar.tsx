@@ -108,7 +108,7 @@ export default function Navbar({ categories, initialDate }: NavbarProps) {
                   isDisabled={isSigningOut}
                   aria-busy={isSigningOut}
                   aria-label="ব্যবহারকারীর মেনু"
-                  className="flex items-center gap-2 sm:gap-2.5 h-10 pl-1.5 pr-3 rounded-full border border-[#7f9484] bg-[#f3fbf4] hover:border-[#15803d] transition-colors cursor-pointer disabled:opacity-60"
+                  className="flex items-center gap-2 sm:gap-2.5 h-10 pl-1.5 pr-3 rounded-full border border-[#7f9484] bg-[#f3fbf4] hover:border-[#15803d] active:bg-[#e5f5e8] focus:outline-none focus-visible:outline-none data-[focus-visible=true]:outline-none data-[focus-visible=true]:border-[#15803d] data-[focus-visible=true]:ring-2 data-[focus-visible=true]:ring-[#15803d]/20 data-[open=true]:border-[#15803d] data-[open=true]:ring-2 data-[open=true]:ring-[#15803d]/20 transition-[background-color,border-color,box-shadow] cursor-pointer disabled:opacity-60"
                 >
                   <Avatar size="sm">
                     {user.image ? (
@@ -190,7 +190,7 @@ export default function Navbar({ categories, initialDate }: NavbarProps) {
             <Link
               href="/"
               aria-current={pathname === "/" ? "page" : undefined}
-              className={`inline-flex items-center gap-1.5 h-10 sm:h-9 px-3.5 rounded-lg border text-xs sm:text-sm leading-snug whitespace-nowrap transition-colors shrink-0 ${
+              className={`inline-flex items-center gap-1.5 h-10 sm:h-9 px-3.5 rounded-lg border text-xs sm:text-sm leading-snug whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803d]/40 focus-visible:ring-inset transition-colors shrink-0 ${
                 pathname === "/"
                   ? "bg-[#e9f7ed] text-[#14532d] border-[#b7dfc2] font-semibold"
                   : "border-transparent text-slate-700 hover:bg-[#f3fbf4] hover:text-[#15803d] font-medium"
@@ -206,7 +206,7 @@ export default function Navbar({ categories, initialDate }: NavbarProps) {
                   key={cat.id}
                   href={`/category/${cat.slug}`}
                   aria-current={isActive ? "page" : undefined}
-                  className={`inline-flex items-center gap-1.5 h-10 sm:h-9 px-3.5 rounded-lg border text-xs sm:text-sm leading-snug whitespace-nowrap transition-colors shrink-0 ${
+                  className={`inline-flex items-center gap-1.5 h-10 sm:h-9 px-3.5 rounded-lg border text-xs sm:text-sm leading-snug whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803d]/40 focus-visible:ring-inset transition-colors shrink-0 ${
                     isActive
                       ? "bg-[#e9f7ed] text-[#14532d] border-[#b7dfc2] font-semibold"
                       : "border-transparent text-slate-700 hover:bg-[#f3fbf4] hover:text-[#15803d] font-medium"
