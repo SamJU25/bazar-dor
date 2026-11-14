@@ -17,6 +17,14 @@ import {
 } from "@/lib/state-machines";
 import { ICategory } from "@/types/bazar";
 
+function getNavLinkClass(isActive: boolean): string {
+  return `relative inline-flex items-center gap-1.5 h-10 sm:h-9 px-2.5 sm:px-3 rounded-lg text-xs sm:text-sm leading-snug whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803d]/40 focus-visible:ring-inset transition-colors shrink-0 ${
+    isActive
+      ? "text-[#15803d] font-semibold after:content-[''] after:absolute after:inset-x-2.5 after:bottom-0 after:h-[2px] after:rounded-full after:bg-[#15803d]"
+      : "text-slate-700 hover:text-[#15803d] font-medium"
+  }`;
+}
+
 interface NavbarProps {
   categories: ICategory[];
   initialDate?: string;
@@ -190,11 +198,7 @@ export default function Navbar({ categories, initialDate }: NavbarProps) {
             <Link
               href="/"
               aria-current={pathname === "/" ? "page" : undefined}
-              className={`inline-flex items-center gap-1.5 h-10 sm:h-9 px-3.5 rounded-lg border text-xs sm:text-sm leading-snug whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803d]/40 focus-visible:ring-inset transition-colors shrink-0 ${
-                pathname === "/"
-                  ? "bg-[#e9f7ed] text-[#14532d] border-[#b7dfc2] font-semibold"
-                  : "border-transparent text-slate-700 hover:bg-[#f3fbf4] hover:text-[#15803d] font-medium"
-              }`}
+              className={getNavLinkClass(pathname === "/")}
             >
               <span>সব পণ্য</span>
             </Link>
@@ -206,11 +210,7 @@ export default function Navbar({ categories, initialDate }: NavbarProps) {
                   key={cat.id}
                   href={`/category/${cat.slug}`}
                   aria-current={isActive ? "page" : undefined}
-                  className={`inline-flex items-center gap-1.5 h-10 sm:h-9 px-3.5 rounded-lg border text-xs sm:text-sm leading-snug whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803d]/40 focus-visible:ring-inset transition-colors shrink-0 ${
-                    isActive
-                      ? "bg-[#e9f7ed] text-[#14532d] border-[#b7dfc2] font-semibold"
-                      : "border-transparent text-slate-700 hover:bg-[#f3fbf4] hover:text-[#15803d] font-medium"
-                  }`}
+                  className={getNavLinkClass(isActive)}
                 >
                   <span aria-hidden="true">{cat.icon}</span>
                   <span>{cat.nameBn}</span>
