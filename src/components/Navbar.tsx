@@ -18,12 +18,15 @@ import {
 import { ICategory } from "@/types/bazar";
 
 function getNavLinkClass(isActive: boolean): string {
-  return `relative inline-flex items-center gap-1.5 h-10 sm:h-9 px-2.5 sm:px-3 rounded-lg text-xs sm:text-sm leading-snug whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803d]/40 focus-visible:ring-inset transition-colors shrink-0 ${
+  return `group relative inline-flex items-center h-10 xl:h-full px-0.5 text-xs sm:text-sm leading-snug whitespace-nowrap focus-visible:outline-none transition-colors shrink-0 ${
     isActive
-      ? "text-[#15803d] font-semibold after:content-[''] after:absolute after:inset-x-2.5 after:bottom-0 after:h-[2px] after:rounded-full after:bg-[#15803d]"
+      ? "text-[#15803d] font-semibold after:content-[''] after:absolute after:inset-x-1.5 after:bottom-0 after:h-[2px] after:rounded-full after:bg-[#15803d]"
       : "text-slate-700 hover:text-[#15803d] font-medium"
   }`;
 }
+
+const NAV_LABEL_CLASS =
+  "px-2.5 py-1.5 rounded-lg transition-colors group-hover:bg-[#f3fbf4] group-focus-visible:ring-2 group-focus-visible:ring-[#15803d]/45";
 
 interface NavbarProps {
   categories: ICategory[];
@@ -80,8 +83,8 @@ export default function Navbar({ categories, initialDate }: NavbarProps) {
   return (
     <header className="w-full bg-white border-b border-[#dce6dc] sticky top-0 z-50">
       <div className="max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12">
-        <div className="flex flex-wrap xl:flex-nowrap items-center justify-between gap-x-2.5 sm:gap-x-3 xl:gap-x-5 xl:py-2.5">
-          <div className="order-1 flex-1 xl:flex-initial flex flex-col gap-1 min-w-0 py-2.5 sm:py-3 xl:py-0">
+        <div className="flex flex-wrap xl:flex-nowrap items-center xl:items-stretch justify-between gap-x-2.5 sm:gap-x-3 xl:gap-x-5">
+          <div className="order-1 flex-1 xl:flex-initial flex flex-col justify-center gap-1 min-w-0 py-2.5 sm:py-3 xl:py-2.5">
             <Link href="/" className="flex items-center gap-2 w-fit group">
               <BrandLogo className="w-6 h-6 sm:w-7 sm:h-7" />
               <span className="text-xl sm:text-2xl font-bold text-[#15803d] tracking-tight leading-none">
@@ -101,7 +104,7 @@ export default function Navbar({ categories, initialDate }: NavbarProps) {
 
           <div
             data-auth-state={authMachineState}
-            className="order-2 xl:order-3 flex items-center gap-2 sm:gap-2.5 shrink-0 py-2.5 sm:py-3 xl:py-0"
+            className="order-2 xl:order-3 flex items-center gap-2 sm:gap-2.5 shrink-0 py-2.5 sm:py-3 xl:py-2.5"
           >
             {authGate.status === "loading" ? (
               <div
@@ -193,14 +196,14 @@ export default function Navbar({ categories, initialDate }: NavbarProps) {
 
           <nav
             aria-label="পণ্যের বিভাগসমূহ"
-            className="order-4 xl:order-2 -mx-4 px-4 sm:mx-0 sm:px-0 w-[calc(100%+2rem)] sm:w-full xl:w-auto xl:flex-1 xl:min-w-0 flex items-center xl:justify-center gap-1 sm:gap-1.5 py-2 xl:py-0 overflow-x-auto no-scrollbar"
+            className="order-4 xl:order-2 -mx-4 px-4 sm:mx-0 sm:px-0 w-[calc(100%+2rem)] sm:w-full xl:w-auto xl:flex-1 xl:min-w-0 xl:self-stretch flex items-center xl:justify-center gap-0.5 sm:gap-1 pt-1 pb-0 xl:py-0 overflow-x-auto no-scrollbar"
           >
             <Link
               href="/"
               aria-current={pathname === "/" ? "page" : undefined}
               className={getNavLinkClass(pathname === "/")}
             >
-              <span>সব পণ্য</span>
+              <span className={NAV_LABEL_CLASS}>সব পণ্য</span>
             </Link>
 
             {categories.map((cat) => {
@@ -212,8 +215,7 @@ export default function Navbar({ categories, initialDate }: NavbarProps) {
                   aria-current={isActive ? "page" : undefined}
                   className={getNavLinkClass(isActive)}
                 >
-                  <span aria-hidden="true">{cat.icon}</span>
-                  <span>{cat.nameBn}</span>
+                  <span className={NAV_LABEL_CLASS}>{cat.nameBn}</span>
                 </Link>
               );
             })}
