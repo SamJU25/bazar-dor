@@ -58,7 +58,7 @@ export function AuthRequiredNotice({
       </h1>
       <Link
         href={signInHref}
-        className="inline-flex items-center justify-center h-11 px-6 rounded-xl bg-[#15803d] hover:bg-[#166534] text-white font-semibold text-sm leading-none transition-colors"
+        className="btn-primary h-11 px-6 rounded-xl"
       >
         সাইন ইন করুন
       </Link>

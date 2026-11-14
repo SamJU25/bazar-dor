@@ -41,9 +41,9 @@ export default function CategoryProducts({
         <div>
           <Link
             href="/"
-            className="inline-flex items-center justify-center gap-2 h-11 sm:h-10 px-5 rounded-xl bg-[#15803d] hover:bg-[#166534] text-white text-sm font-semibold leading-none transition-colors"
+            className="btn-primary h-11 sm:h-10 px-5 rounded-xl"
           >
-            <Home size={15} aria-hidden="true" />
+            <Home size={16} aria-hidden="true" />
             <span>হোম পেজ</span>
           </Link>
         </div>

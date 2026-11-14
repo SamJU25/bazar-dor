@@ -91,6 +91,169 @@
     color: #b91c1c;
     outline: none;
   }
+
+  .btn-primary,
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.35;
+    white-space: nowrap;
+    user-select: none;
+    cursor: pointer;
+    transition:
+      background-color 150ms cubic-bezier(0.2, 0, 0, 1),
+      border-color 150ms cubic-bezier(0.2, 0, 0, 1),
+      color 150ms cubic-bezier(0.2, 0, 0, 1),
+      box-shadow 150ms cubic-bezier(0.2, 0, 0, 1),
+      transform 120ms cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  .button.btn-primary svg,
+  .button.btn-secondary svg {
+    margin: 0;
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+  }
+
+  .btn-primary {
+    --button-bg: #15803d;
+    --button-bg-hover: #166534;
+    --button-bg-pressed: #14532d;
+    --button-fg: #ffffff;
+    background-color: #15803d;
+    color: #ffffff;
+    border: 1px solid #146331;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.16),
+      0 1px 2px rgba(22, 34, 24, 0.12);
+  }
+
+  @media (hover: hover) {
+    .btn-primary:hover:not(:disabled):not([aria-disabled="true"]),
+    .button.btn-primary[data-hovered="true"]:not([aria-disabled="true"]) {
+      background-color: #166534;
+      border-color: #14532d;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.14),
+        0 2px 4px rgba(22, 34, 24, 0.16);
+    }
+  }
+
+  .btn-primary:active:not(:disabled):not([aria-disabled="true"]),
+  .button.btn-primary[data-pressed="true"]:not([aria-disabled="true"]) {
+    background-color: #14532d;
+    border-color: #114324;
+    box-shadow: inset 0 1px 2px rgba(10, 46, 23, 0.35);
+    transform: scale(0.985);
+  }
+
+  .btn-primary:focus-visible,
+  .button.btn-primary:focus-visible:not([data-focused]),
+  .button.btn-primary[data-focus-visible="true"] {
+    outline: none;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.16),
+      0 0 0 2px #f8faf8,
+      0 0 0 4px #15803d;
+  }
+
+  .btn-primary:disabled:not([aria-busy="true"]),
+  .button.btn-primary:disabled:not([aria-busy="true"]),
+  .button.btn-primary[aria-disabled="true"]:not([aria-busy="true"]) {
+    background-color: #e4ede5;
+    border-color: #cbd9cc;
+    color: #5b725f;
+    box-shadow: none;
+    opacity: 1;
+    cursor: not-allowed;
+    pointer-events: none;
+    transform: none;
+  }
+
+  .btn-primary[aria-busy="true"],
+  .button.btn-primary[aria-busy="true"] {
+    background-color: #277945;
+    border-color: #1f6338;
+    color: #ffffff;
+    box-shadow: none;
+    opacity: 1;
+    cursor: progress;
+    pointer-events: none;
+    transform: none;
+  }
+
+  .btn-secondary {
+    --button-bg: #ffffff;
+    --button-bg-hover: #f3fbf4;
+    --button-bg-pressed: #e5f5e8;
+    --button-fg: #162218;
+    background-color: #ffffff;
+    color: #162218;
+    border: 1px solid #7f9484;
+    box-shadow: 0 1px 2px rgba(22, 34, 24, 0.05);
+  }
+
+  @media (hover: hover) {
+    .btn-secondary:hover:not(:disabled):not([aria-disabled="true"]),
+    .button.btn-secondary[data-hovered="true"]:not([aria-disabled="true"]) {
+      background-color: #f3fbf4;
+      border-color: #15803d;
+      color: #15803d;
+      box-shadow: 0 1px 3px rgba(22, 34, 24, 0.08);
+    }
+  }
+
+  .btn-secondary:active:not(:disabled):not([aria-disabled="true"]),
+  .button.btn-secondary[data-pressed="true"]:not([aria-disabled="true"]) {
+    background-color: #e5f5e8;
+    border-color: #166534;
+    color: #166534;
+    box-shadow: none;
+    transform: scale(0.985);
+  }
+
+  .btn-secondary:focus-visible,
+  .button.btn-secondary:focus-visible:not([data-focused]),
+  .button.btn-secondary[data-focus-visible="true"] {
+    outline: none;
+    border-color: #15803d;
+    box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.2);
+  }
+
+  .btn-secondary:disabled,
+  .button.btn-secondary:disabled,
+  .button.btn-secondary[aria-disabled="true"] {
+    background-color: #f4f7f4;
+    border-color: #d3dfd4;
+    color: #64748b;
+    box-shadow: none;
+    opacity: 1;
+    cursor: not-allowed;
+    pointer-events: none;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn-primary,
+    .btn-secondary {
+      transition:
+        background-color 150ms ease,
+        border-color 150ms ease,
+        color 150ms ease;
+    }
+
+    .btn-primary:active,
+    .button.btn-primary[data-pressed="true"],
+    .btn-secondary:active,
+    .button.btn-secondary[data-pressed="true"] {
+      transform: none;
+    }
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {

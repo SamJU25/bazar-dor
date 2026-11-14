@@ -181,7 +181,7 @@ export default function UpdateProfilePage() {
                 type="submit"
                 isDisabled={isBusy || !trimmedName || !isDirty}
                 aria-busy={isBusy}
-                className="w-full h-11 mt-1 rounded-xl bg-[#15803d] hover:bg-[#166534] text-white font-semibold text-sm leading-none transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-55 disabled:cursor-not-allowed"
+                className="btn-primary w-full h-11 mt-1 rounded-xl"
               >
                 {isBusy ? (
                   <>

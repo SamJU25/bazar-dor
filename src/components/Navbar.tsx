@@ -167,13 +167,13 @@ export default function Navbar({ categories, initialDate }: NavbarProps) {
               <div className="flex items-center gap-2">
                 <Link
                   href="/signin"
-                  className="inline-flex items-center justify-center h-10 sm:h-9 px-3.5 sm:px-4 rounded-lg text-xs sm:text-sm font-semibold leading-none text-[#162218] bg-white border border-[#7f9484] hover:text-[#15803d] hover:bg-[#f3fbf4] hover:border-[#15803d] transition-colors whitespace-nowrap"
+                  className="btn-secondary h-10 sm:h-9 px-3.5 sm:px-4 rounded-lg text-xs sm:text-sm"
                 >
                   সাইন ইন
                 </Link>
                 <Link
                   href="/signup"
-                  className="inline-flex items-center justify-center h-10 sm:h-9 px-3.5 sm:px-4 rounded-lg bg-[#15803d] hover:bg-[#166534] text-white text-xs sm:text-sm font-semibold leading-none transition-colors whitespace-nowrap"
+                  className="btn-primary h-10 sm:h-9 px-3.5 sm:px-4 rounded-lg text-xs sm:text-sm"
                 >
                   সাইন আপ
                 </Link>
@@ -190,10 +190,10 @@ export default function Navbar({ categories, initialDate }: NavbarProps) {
             <Link
               href="/"
               aria-current={pathname === "/" ? "page" : undefined}
-              className={`inline-flex items-center gap-1.5 h-10 sm:h-9 px-3.5 rounded-lg text-xs sm:text-sm leading-none whitespace-nowrap transition-colors shrink-0 ${
+              className={`inline-flex items-center gap-1.5 h-10 sm:h-9 px-3.5 rounded-lg border text-xs sm:text-sm leading-snug whitespace-nowrap transition-colors shrink-0 ${
                 pathname === "/"
-                  ? "bg-[#15803d] text-white font-semibold"
-                  : "text-slate-700 hover:bg-[#f3fbf4] hover:text-[#15803d] font-medium"
+                  ? "bg-[#e9f7ed] text-[#14532d] border-[#b7dfc2] font-semibold"
+                  : "border-transparent text-slate-700 hover:bg-[#f3fbf4] hover:text-[#15803d] font-medium"
               }`}
             >
               <span>সব পণ্য</span>
@@ -206,10 +206,10 @@ export default function Navbar({ categories, initialDate }: NavbarProps) {
                   key={cat.id}
                   href={`/category/${cat.slug}`}
                   aria-current={isActive ? "page" : undefined}
-                  className={`inline-flex items-center gap-1.5 h-10 sm:h-9 px-3.5 rounded-lg text-xs sm:text-sm leading-none whitespace-nowrap transition-colors shrink-0 ${
+                  className={`inline-flex items-center gap-1.5 h-10 sm:h-9 px-3.5 rounded-lg border text-xs sm:text-sm leading-snug whitespace-nowrap transition-colors shrink-0 ${
                     isActive
-                      ? "bg-[#15803d] text-white font-semibold"
-                      : "text-slate-700 hover:bg-[#f3fbf4] hover:text-[#15803d] font-medium"
+                      ? "bg-[#e9f7ed] text-[#14532d] border-[#b7dfc2] font-semibold"
+                      : "border-transparent text-slate-700 hover:bg-[#f3fbf4] hover:text-[#15803d] font-medium"
                   }`}
                 >
                   <span aria-hidden="true">{cat.icon}</span>

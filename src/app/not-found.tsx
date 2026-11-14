@@ -11,9 +11,9 @@ export default function NotFound() {
       <div className="pt-2">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 h-11 sm:h-10 px-6 rounded-xl bg-[#15803d] hover:bg-[#166534] text-white font-semibold text-sm leading-none transition-colors"
+          className="btn-primary h-11 sm:h-10 px-6 rounded-xl"
         >
-          <Home size={15} aria-hidden="true" />
+          <Home size={16} aria-hidden="true" />
           <span>হোম পেজ</span>
         </Link>
       </div>

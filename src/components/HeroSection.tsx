@@ -18,12 +18,12 @@ export default function HeroSection() {
           <div className="flex flex-wrap items-center gap-2.5 shrink-0">
             <a
               href="#সব-পণ্য"
-              className="inline-flex items-center justify-center gap-1.5 h-11 sm:h-10 px-4 sm:px-5 rounded-xl bg-[#15803d] hover:bg-[#166534] text-white text-sm font-semibold leading-none transition-colors"
+              className="btn-primary gap-1.5 h-11 sm:h-10 px-4 sm:px-5 rounded-xl"
             >
               <span>সব পণ্য দেখুন</span>
               <ArrowDown
-                size={15}
-                strokeWidth={2.25}
+                size={16}
+                strokeWidth={2.1}
                 aria-hidden="true"
                 className="shrink-0"
               />
@@ -31,7 +31,7 @@ export default function HeroSection() {
 
             <a
               href="#দর-পরিবর্তন"
-              className="inline-flex items-center justify-center h-11 sm:h-10 px-4 rounded-xl bg-white border border-[#7f9484] hover:border-[#15803d] hover:bg-[#f3fbf4] text-[#162218] hover:text-[#15803d] text-sm font-semibold leading-none transition-colors"
+              className="btn-secondary h-11 sm:h-10 px-4 rounded-xl"
             >
               আজকের দর পরিবর্তন
             </a>

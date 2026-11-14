@@ -24,16 +24,16 @@ export default function ErrorPage({
         <button
           type="button"
           onClick={() => reset()}
-          className="inline-flex items-center justify-center gap-2 h-11 sm:h-10 px-5 rounded-xl bg-[#15803d] hover:bg-[#166534] text-white font-semibold text-sm leading-none transition-colors cursor-pointer"
+          className="btn-primary h-11 sm:h-10 px-5 rounded-xl"
         >
-          <RefreshCw size={15} aria-hidden="true" />
+          <RefreshCw size={16} aria-hidden="true" />
           <span>আবার চেষ্টা করুন</span>
         </button>
         <Link
           href="/"
-          className="inline-flex items-center justify-center gap-2 h-11 sm:h-10 px-5 rounded-xl bg-white border border-[#7f9484] hover:border-[#15803d] hover:bg-[#f3fbf4] text-[#162218] hover:text-[#15803d] font-semibold text-sm leading-none transition-colors"
+          className="btn-secondary h-11 sm:h-10 px-5 rounded-xl"
         >
-          <Home size={15} aria-hidden="true" />
+          <Home size={16} aria-hidden="true" />
           <span>হোম পেজ</span>
         </Link>
       </div>

@@ -22,7 +22,7 @@ export default function CatalogEmptyPanel({
       <button
         type="button"
         onClick={onAction}
-        className="inline-flex items-center justify-center h-11 sm:h-10 px-5 rounded-xl bg-[#15803d] hover:bg-[#166534] text-white text-sm font-semibold leading-none transition-colors cursor-pointer"
+        className="btn-primary h-11 sm:h-10 px-5 rounded-xl"
       >
         {actionLabel}
       </button>

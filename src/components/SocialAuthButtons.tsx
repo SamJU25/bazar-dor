@@ -57,7 +57,7 @@ export default function SocialAuthButtons({
         isDisabled={isRedirecting}
         aria-busy={activeProvider === "google"}
         onPress={() => void handleSocialLogin("google")}
-        className="w-full h-11 rounded-xl border border-[#7f9484] bg-white hover:bg-[#f3fbf4] hover:border-[#15803d] text-[#162218] text-sm font-semibold leading-none flex items-center justify-center gap-2.5 transition-colors cursor-pointer disabled:opacity-55 disabled:cursor-not-allowed"
+        className="btn-secondary w-full h-11 rounded-xl gap-2.5"
       >
         <svg className="w-4 h-4 mx-0 my-0 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
           <path
@@ -90,7 +90,7 @@ export default function SocialAuthButtons({
         isDisabled={isRedirecting}
         aria-busy={activeProvider === "facebook"}
         onPress={() => void handleSocialLogin("facebook")}
-        className="w-full h-11 rounded-xl border border-[#7f9484] bg-white hover:bg-[#f3fbf4] hover:border-[#15803d] text-[#162218] text-sm font-semibold leading-none flex items-center justify-center gap-2.5 transition-colors cursor-pointer disabled:opacity-55 disabled:cursor-not-allowed"
+        className="btn-secondary w-full h-11 rounded-xl gap-2.5"
       >
         <svg className="w-4 h-4 mx-0 my-0 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
           <path

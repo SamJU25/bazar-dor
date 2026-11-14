@@ -96,7 +96,7 @@ export default function ProfilePage() {
           <div className="pt-2">
             <Link
               href="/profile/update-profile"
-              className="w-full h-11 rounded-xl bg-[#15803d] hover:bg-[#166534] text-white font-semibold text-sm leading-none transition-colors flex items-center justify-center gap-2"
+              className="btn-primary w-full h-11 rounded-xl"
             >
               <Edit3 size={16} aria-hidden="true" />
               <span>তথ্য আপডেট করুন</span>
